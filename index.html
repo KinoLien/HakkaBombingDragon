@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+  	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  	<link rel="stylesheet" type="text/css" href="css/dragon.css" />
+  	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+  	<style type="text/css">
+  		/*@media (min-width: 768px) {
+  			.navbar-form .form-control{
+  				width: 320px;
+  			}
+  			.table-path{
+  				font-size: 16px;
+    			margin: 6px 0;
+  			}
+  			.table-path > .glyphicon{
+  				margin-right: 5px;
+  			}
+  		}
+  		.loading{
+  			margin: 7px 5px;
+  			display: none;
+  		}
+
+		.container-scroll{
+			overflow:auto;
+		}
+  		.glyphicon-refresh-animate {
+		    -animation: spin .7s infinite linear;
+		    -webkit-animation: spin2 .7s infinite linear;
+		}
+
+		@-webkit-keyframes spin2 {
+		    from { -webkit-transform: rotate(0deg);}
+		    to { -webkit-transform: rotate(360deg);}
+		}
+
+		@keyframes spin {
+		    from { transform: scale(1) rotate(0deg);}
+		    to { transform: scale(1) rotate(360deg);}
+		}*/
+  	</style>
+  	<script>
+		// document.getElementById('stage_1').addEventListener('mousemove', function(e){
+		// var x = e.offsetX==undefined?e.layerX:e.offsetX;
+		// var y = e.offsetY==undefined?e.layerY:e.offsetY;
+		// console.log(x + " " + y);
+		// });
+		var gamer = {
+			_stageElSelector: ".stage",
+			_stageNamePrefix: "stage_",
+			_stageNumberRex: new RegExp("stage_(.*)"),
+			_stageSelectProperty: "id",
+			currentStage: 1,
+			// [ 'stage_1', '1', index: 0, input: 'stage_1' ]
+			_findStage:function(el){
+				var parentEl = $(el).parents(this._stageElSelector);
+				if(parentEl){
+					var prop = $(parentEl).attr(this._stageSelectProperty);
+					var number = this._stageNumberRex.test(prop) ? prop.match(this._stageNumberRex)[1] : null;
+					if(number) this.currentStage = number;
+				}
+			},
+			forceToStage: function(name){
+				this.currentStage = 1;
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + ']').hide();
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').show();
+			},
+			toNext: function(){
+				if(typeof this.currentStage == 'undefined' || this.currentStage == null){
+					// ???
+				}
+				var next = 1;
+				// game transform logic
+				switch(this.currentStage){
+					case 1:
+						next = 4;
+						break;
+				}
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').hide();
+				// transform animation or not
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + next + ']').show();
+			}
+		};
+
+		$(window).load(function(){
+			$(".next-stage").click(function(){
+				gamer.toNext();
+			});
+		});
+
+		$(document.body).ready(function(){
+			gamer.forceToStage(1);
+		});
+  	</script>
+  </head>
+  <body>
+  	<!-- <div class="font-zhuin">沒什麼事</div> -->
+  	<div id="stage_1" class="stage stage-intro">
+  		<div class="next-stage button-intro-enter" onclick=""></div>
+  	</div>
+  	<div id="stage_4" class="stage stage-bomb"></div>
+  </body>
+</html>
