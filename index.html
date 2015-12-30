@@ -49,12 +49,29 @@
 		// var y = e.offsetY==undefined?e.layerY:e.offsetY;
 		// console.log(x + " " + y);
 		// });
+
 		var gamer = {
 			_stageElSelector: ".stage",
 			_stageNamePrefix: "stage_",
 			_stageNumberRex: new RegExp("stage_(.*)"),
 			_stageSelectProperty: "id",
+			_bombSelector: "div[b-n]",
+			_bombAttrSelector: "b-n",
 			currentStage: 1,
+			_processInterval: null,
+			_showInterval: null,
+			_showSeconds: 3,
+			_bombProcessAll:[],
+			_bombShowing:[],
+			_getValidIndex: function() {
+				var min = 0,
+					len = this._bombProcessAll.length,
+					max = len - 1;
+				if(len){
+					return Math.floor(Math.random() * (max - min + 1) + min);
+				}				
+				return -1;
+			},
 			// [ 'stage_1', '1', index: 0, input: 'stage_1' ]
 			_findStage:function(el){
 				var parentEl = $(el).parents(this._stageElSelector);
@@ -83,12 +100,86 @@
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').hide();
 				// transform animation or not
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + next + ']').show();
+			},
+			bombStart: function(){
+				if(!this._processInterval && !this._showInterval){
+					this._showInterval = {};
+					this.__showCacheTempMaps = {};
+					$(this._bombSelector).each((function(scope){
+						return function(i,item){
+							var id = item.getAttribute(scope._bombAttrSelector);
+							scope.__showCacheTempMaps[id] = item;
+							scope._bombProcessAll.push(id);
+						};
+					})(this));
+					this._processInterval = setInterval((function(scope, s){
+						return function(){	
+							var idx = scope._getValidIndex();
+							if(idx != -1){
+								console.log("validIndex: " + idx);
+								var itemId = scope._bombProcessAll.splice(idx, 1)[0];
+								console.log("get Item id: " + itemId);
+								scope._bombShowing.push(itemId);
+								$(scope.__showCacheTempMaps[itemId]).show();
+								// $("[" + scope._bombAttrSelector + "=" + itemId + "]").show();
+								scope._showInterval[itemId] = setTimeout((function(id, outerScope){
+									return function(){
+										outerScope.bombStop(id);
+									}
+								})(itemId, scope), s * 1000);
+							}
+						};
+					})(this, this._showSeconds), this._showSeconds * 1000 / 5);	
+				}
+			},
+			bombStop: function(itemId){
+				var showingIndex = this._bombShowing.indexOf(itemId);
+				if(showingIndex != -1 && this._showInterval[itemId]){
+					clearInterval(this._showInterval[itemId]);
+					this._showInterval[itemId] = null;
+					$(this.__showCacheTempMaps[itemId]).hide();
+					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
+					// back to all
+					this._bombShowing.splice(showingIndex, 1);
+					console.log("stop and push: " + itemId);
+					this._bombProcessAll.push(itemId);
+				}	
+			},
+			bombStopAll: function(){
+				$(this._bombSelector).hide();
+				clearInterval(this._processInterval);
+				for(var i in this._showInterval){
+					clearInterval(this._showInterval[i]);
+				}
+				this._processInterval = null;
+				this._showInterval = null;
+				this.__showCacheTempMaps = null;
+				this._bombProcessAll = [];
+				this._bombShowing = [];
 			}
 		};
 
 		$(window).load(function(){
 			$(".next-stage").click(function(){
 				gamer.toNext();
+			});
+
+			$(".b-body-part").click(function(){
+				var bombBody = $(this);
+				var exploBody = $(this).next();
+				$(this).hide();
+				$(this).next().show();
+				setTimeout((function(bb, eb){
+					return function(){ 
+						gamer.bombStop($(bb).parent().attr("b-n"));
+						bb.show();
+						eb.hide();
+					};
+				})(bombBody, exploBody),400);
+			});
+
+			$(".dragon-head").click(function(){
+				gamer.bombStart();
 			});
 		});
 
@@ -102,6 +193,57 @@
   	<div id="stage_1" class="stage stage-intro">
   		<div class="next-stage button-intro-enter" onclick=""></div>
   	</div>
-  	<div id="stage_4" class="stage stage-bomb"></div>
+  	<div id="stage_4" class="stage stage-bomb">
+  		<!-- <div class="background-temp">
+  			<img src="images/04-backtemp.jpg" width="100%;" />
+  		</div> -->
+
+  		<!-- <div class="ballman">
+  			<img src="images/04-ballman.png" width="100%" />
+  		</div> -->
+  		
+  		<!-- <div class="people">
+  			<img src="images/04-people.png" align="center" width="100%;">
+  		</div> -->
+  		<div class="dragon-head">
+  			<img src="images/04-head.png" width="100%;">
+  		</div>
+  		
+  		<div class="bomb" style="left: 280px;top: 365px;" b-n="1">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  		<div class="bomb" style="left: 160px;top: 380px;" b-n="2">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  		<div class="bomb" style="left: 356px;top: 315px;" b-n="3">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  		<div class="bomb" style="left: 420px;top: 375px;" b-n="4">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  		<div class="bomb" style="left: 590px;top: 315px;" b-n="5">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  		<div class="bomb" style="left: 500px;top: 235px;" b-n="6">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  		<div class="bomb" style="left: 400px;top: 255px;" b-n="7">
+  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
+  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
+  		</div>
+
+  	</div>
   </body>
 </html>
