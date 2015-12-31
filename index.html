@@ -140,7 +140,7 @@
 		  };
 		})();
 
-		var gamer = {
+		window.gamer = {
 			_stageElSelector: ".stage",
 			_stageNamePrefix: "stage_",
 			_stageNumberRex: new RegExp("stage_(.*)"),
@@ -256,23 +256,49 @@
 			}
 		};
 
+		var bombPositions = [
+			280, 365, 160, 380, 356, 315, 420, 375, 590, 315, 500, 235, 400, 255,
+			240, 350, 235, 385, 105, 385, 190, 382, 120, 365, 324, 300, 261, 285,
+			288, 260, 570, 288, 535, 310, 480, 290, 485, 315, 480, 246, 525, 278,
+			455, 239, 440, 258, 468, 277, 312, 276, 315, 250, 385, 310, 333, 360,
+			323, 380, 358, 375, 386, 389, 386, 359, 409, 329, 414, 288, 383, 282,
+			359, 279, 359, 244, 292, 311, 572, 348, 445, 305
+		];
+		var bombSrc = "images/04-bomb9.png";
+		var exploSrc = "images/04-explosion.gif";
 		$(window).load(function(){
+
+			var stage4El = $('#stage_4');
+			for(var i = 0, j = 0, len = bombPositions.length; i < len; i+=2, j++){
+				var str = '<div class="bomb" style="left:' + bombPositions[i] + 'px;top:'
+					+ bombPositions[i+1] + 'px;" b-n="' + (j+1) + '">' +
+  					'<img class="b-body-part" width="100%" /><img class="b-explo-part" width="100%" /></div>';
+				stage4El.append(str);
+			}
+
+
 			$(".next-stage").click(function(){
 				gamer.toNext();
 			});
 
+			$(".b-body-part").attr('src', bombSrc);
+
+			//  src="images/04-explosion.gif" 
 			$(".b-body-part").click(function(){
 				var bombBody = $(this);
-				var exploBody = $(this).next();
-				$(this).hide();
-				$(this).next().show();
-				setTimeout((function(bb, eb){
+				// var exploBody = $(this).next();
+				// exploBody.attr('src', "images/04-explosion.gif");
+				// bombBody.hide();
+				// exploBody.show();
+				bombBody.attr('src', exploSrc);
+				setTimeout((function(bb){
 					return function(){ 
 						gamer.bombStop($(bb).parent().attr("b-n"));
-						bb.show();
-						eb.hide();
+						bb.attr('src', bombSrc);
+						// bb.show();
+						// eb.hide();
 					};
-				})(bombBody, exploBody),400);
+				})(bombBody), 400);
 			});
 
 		});
@@ -310,41 +336,6 @@
   			<img src="images/04-head.png" width="100%;">
   		</div>
   		
-  		<div class="bomb" style="left: 280px;top: 365px;" b-n="1">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
-  		<div class="bomb" style="left: 160px;top: 380px;" b-n="2">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
-  		<div class="bomb" style="left: 356px;top: 315px;" b-n="3">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
-  		<div class="bomb" style="left: 420px;top: 375px;" b-n="4">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
-  		<div class="bomb" style="left: 590px;top: 315px;" b-n="5">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
-  		<div class="bomb" style="left: 500px;top: 235px;" b-n="6">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
-  		<div class="bomb" style="left: 400px;top: 255px;" b-n="7">
-  			<img class="b-body-part" src="images/04-bomb9.png" width="100%" />
-  			<img class="b-explo-part" src="images/04-explosion.png" width="100%" />
-  		</div>
-
   	</div>
   </body>
 </html>

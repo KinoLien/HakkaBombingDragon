@@ -132,7 +132,7 @@ body{
 
 div[class^=bomb]{
   position: absolute;
-  width: 45px;
+  width: 65px;
   display: none;
 }
 
