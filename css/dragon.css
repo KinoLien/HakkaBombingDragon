@@ -106,7 +106,32 @@ body{
 }
 
 .stage-intro{
-  background-image:url(../images/01-intro.jpg);
+  background-image:url(../images/01-intro.png);
+}
+
+.intro-dragon{
+  position: absolute;
+  left: 93px;
+  top: 35px;
+  width: 440px;
+  height: 460px;  
+}
+
+.intro-girl{
+  position: absolute;
+  left: 410px;
+  top: 330px;
+  width: 130px;
+  height: 140px; 
+}
+
+.intro-firework{
+  position: absolute;
+  /*left: 410px;
+  top: 330px;*/
+  width: 130px;
+  height: 130px; 
+  /*background: black;*/
 }
 
 .stage-bomb{

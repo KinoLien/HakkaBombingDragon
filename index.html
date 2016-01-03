@@ -140,6 +140,106 @@
 		  };
 		})();
 
+		window.stage1Process = {
+			_processInterval: null,
+			_showInterval: null,
+			_fireworkProcessAll: [],
+			_fireworkShowing: [],
+			_fireworkPositions: [
+				120, 20, 348, 0, 590, 0, 385, 210, 320, 369, 590, 260
+			],
+			_hasInitialized: false,
+			_getValidIndex: function(){
+				var min = 0,
+					len = this._fireworkProcessAll.length,
+					max = len - 1;
+				if(len){
+					return Math.floor(Math.random() * (max - min + 1) + min);
+				}				
+				return -1;
+			},
+			init: function(){
+				if(this._hasInitialized == false){
+					var stage1El = $('#stage_1');
+					var fp = this._fireworkPositions;
+					for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
+						var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
+							+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
+		  					'<img width="100%" /></div>';
+						stage1El.append(str);
+					}
+					this._hasInitialized = true;
+				}
+			},
+			start: function(){
+				if(!this._processInterval && !this._showInterval){
+					this._showInterval = {};
+					this._showCacheTempMaps = {};
+					$(".intro-firework").each((function(scope){
+						return function(i,item){
+							var id = item.getAttribute('f-n');
+							scope._showCacheTempMaps[id] = item;
+							scope._fireworkProcessAll.push(id);
+						};
+					})(this));
+					this._processInterval = setInterval((function(scope){
+						return function(){	
+							var imageUrl = "images/01-intro-firework.gif";
+
+							var processFn = function(startStamp){
+								return function(){
+									var idx = scope._getValidIndex();
+									var itemId = scope._fireworkProcessAll.splice(idx, 1)[0];
+									scope._fireworkShowing.push(itemId);
+									$(scope._showCacheTempMaps[itemId]).show();
+									$(scope._showCacheTempMaps[itemId]).children(":first-child").attr('src', imageUrl);
+									scope._showInterval[itemId] = setTimeout((function(id, outerScope){
+										return function(){
+											outerScope.stop(id);
+											// console.log(id + " stop show");
+										}
+									})(itemId, scope), startStamp + 800);
+									// console.log(itemId + " start show");
+								};
+							};
+
+							setTimeout(processFn(100), 100);
+							setTimeout(processFn(100), 100);
+						};
+					})(this), 1000);	
+				}
+			},
+			stop: function(itemId){
+				var showingIndex;
+				if(!this._hasInitialized) return;
+				var imageUrl = "images/01-intro-firework-stop.png";
+				if(itemId && (showingIndex = this._fireworkShowing.indexOf(itemId)) != -1 && this._showInterval[itemId]){
+					clearInterval(this._showInterval[itemId]);
+					this._showInterval[itemId] = null;
+					$(this._showCacheTempMaps[itemId]).hide();
+					$(this._showCacheTempMaps[itemId]).children(":first-child").attr('src', imageUrl);
+					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
+					// back to all
+					this._fireworkShowing.splice(showingIndex, 1);
+					// console.log("stop and push: " + itemId);
+					this._fireworkProcessAll.push(itemId);
+					// console.log(this._fireworkProcessAll);
+				}else{
+					$(".intro-firework").hide();
+					$(".intro-firework").children(":first-child").attr('src', imageUrl);
+					clearInterval(this._processInterval);
+					for(var i in this._showInterval){
+						clearInterval(this._showInterval[i]);
+					}
+					this._processInterval = null;
+					this._showInterval = null;
+					this._showCacheTempMaps = null;
+					this._fireworkProcessAll = [];
+					this._fireworkShowing = [];
+				}
+			}
+		};
+
 		window.gamer = {
 			_stageElSelector: ".stage",
 			_stageNamePrefix: "stage_",
@@ -153,6 +253,9 @@
 			_showSeconds: 3,
 			_bombProcessAll:[],
 			_bombShowing:[],
+			_getProcess: function(stage){
+				return window["stage" + stage + "Process"];
+			},
 			_getValidIndex: function() {
 				var min = 0,
 					len = this._bombProcessAll.length,
@@ -172,9 +275,13 @@
 				}
 			},
 			forceToStage: function(name){
-				this.currentStage = 1;
+				this.currentStage = name;
+				var currentProcess = window["stage" + this.currentStage + "Process"];
+				currentProcess.stop();
+				currentProcess.init();
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + ']').hide();
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').show();
+				currentProcess.start();
 			},
 			toNext: function(){
 				if(typeof this.currentStage == 'undefined' || this.currentStage == null){
@@ -184,6 +291,7 @@
 				// game transform logic
 				switch(this.currentStage){
 					case 1:
+						this._getProcess(this.currentStage).stop();
 						next = 4;
 						window.stageTimebar = TimeBar.getInstanceById('sketchSecond');
 						stageTimebar.setSecond(20);
@@ -311,6 +419,15 @@
   <body>
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
   	<div id="stage_1" class="stage stage-intro">
+  		<div class="intro-dragon">
+  			<img src="images/01-intro-dragon.gif" width="100%;">
+  		</div>
+  		<div class="intro-girl">
+  			<img src="images/01-intro-girl.gif" width="100%;">
+  		</div>
+  		<!-- <div class="intro-firework">
+  			<img src="images/01-intro-firework.gif" width="100%;">
+  		</div> -->
   		<div class="next-stage button-intro-enter" onclick=""></div>
   	</div>
   	<div id="stage_4" class="stage stage-bomb">
