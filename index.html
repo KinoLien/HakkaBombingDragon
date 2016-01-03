@@ -240,22 +240,105 @@
 			}
 		};
 
-		window.gamer = {
-			_stageElSelector: ".stage",
-			_stageNamePrefix: "stage_",
-			_stageNumberRex: new RegExp("stage_(.*)"),
-			_stageSelectProperty: "id",
-			_bombSelector: "div[b-n]",
-			_bombAttrSelector: "b-n",
-			currentStage: 1,
+		window.stage2Process = {
+			_hasInitialized:false,
+			_textDom: null,
+			_showInterval: null,
+			_textStr: "這裡放一些文字，點點點。",
+			init:function(){
+				if(this._hasInitialized == false){
+					var stageEl = $('#stage_2');
+					this._textDom = stageEl.children(":last-child");
+					this._hasInitialized = true;
+				}
+			},
+			start:function(){
+				var scope = this;
+				scope._showInterval = {};
+				$(".message-dialog").fadeIn({
+					complete:function(){
+						var text = scope._textStr;
+						for(var i = 0, len = text.length; i < len; i++){
+							scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+								return function(){
+									var textNode = document.createTextNode(str);
+        							dom.append(textNode);
+								};
+							})(text[i], scope._textDom), (i+1) * 200);
+
+							// automatically jump
+							if(i + 1 == len){
+								scope._showInterval["auto"] = setTimeout(function(){
+									gamer.toNext();		
+								}, i * 200 + 4000);
+							}
+						}
+					}
+				});
+			},
+			stop:function(){
+				for(var i in this._showInterval){
+					clearInterval(this._showInterval[i]);
+				}
+				this._showInterval = null;
+				this._textDom.empty();
+			}
+		};
+
+		window.stage3Process = {
+			_hasInitialized:false,
+			_textDom: null,
+			_showInterval: null,
+			_textStr: "這裡也是放一些文字，點點點。",
+			init:function(){
+				if(this._hasInitialized == false){
+					var stageEl = $('#stage_3');
+					this._textDom = stageEl.children(":last-child");
+					this._hasInitialized = true;
+				}
+			},
+			start:function(){
+				var scope = this;
+				scope._showInterval = {};
+				var text = scope._textStr;
+				for(var i = 0, len = text.length; i < len; i++){
+					scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+						return function(){
+							var textNode = document.createTextNode(str);
+							dom.append(textNode);
+						};
+					})(text[i], scope._textDom), (i+1) * 200);
+				}
+			},
+			stop: function(){
+				for(var i in this._showInterval){
+					clearInterval(this._showInterval[i]);
+				}
+				this._showInterval = null;
+				this._textDom.empty();
+			}
+		};
+
+		window.stage4Process = {
+			_bombPositions: [
+				280, 365, 160, 380, 356, 315, 420, 375, 590, 315, 500, 235, 400, 255,
+				240, 350, 235, 385, 105, 385, 190, 382, 120, 365, 324, 300, 261, 285,
+				288, 260, 570, 288, 535, 310, 480, 290, 485, 315, 480, 246, 525, 278,
+				455, 239, 440, 258, 468, 277, 312, 276, 315, 250, 385, 310, 333, 360,
+				323, 380, 358, 375, 386, 389, 386, 359, 409, 329, 414, 288, 383, 282,
+				359, 279, 359, 244, 292, 311, 572, 348, 445, 305
+			],
+			_bombSrc: "images/04-bomb9.png",
+			_exploSrc: "images/04-explosion.gif",
 			_processInterval: null,
 			_showInterval: null,
 			_showSeconds: 3,
+			_limitSeconds: 20,
+			_timebar: null,
 			_bombProcessAll:[],
 			_bombShowing:[],
-			_getProcess: function(stage){
-				return window["stage" + stage + "Process"];
-			},
+			_bombSelector: "div[b-n]",
+			_bombAttrSelector: "b-n",
 			_getValidIndex: function() {
 				var min = 0,
 					len = this._bombProcessAll.length,
@@ -265,48 +348,42 @@
 				}				
 				return -1;
 			},
-			// [ 'stage_1', '1', index: 0, input: 'stage_1' ]
-			_findStage:function(el){
-				var parentEl = $(el).parents(this._stageElSelector);
-				if(parentEl){
-					var prop = $(parentEl).attr(this._stageSelectProperty);
-					var number = this._stageNumberRex.test(prop) ? prop.match(this._stageNumberRex)[1] : null;
-					if(number) this.currentStage = number;
-				}
+			changeProperty: function(name, value){
+				this[name] = value;
 			},
-			forceToStage: function(name){
-				this.currentStage = name;
-				var currentProcess = window["stage" + this.currentStage + "Process"];
-				currentProcess.stop();
-				currentProcess.init();
-				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + ']').hide();
-				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').show();
-				currentProcess.start();
-			},
-			toNext: function(){
-				if(typeof this.currentStage == 'undefined' || this.currentStage == null){
-					// ???
+			init:function(){
+				var scope = this;
+				var stage4El = $('#stage_4');
+				var bp = scope._bombPositions;
+				for(var i = 0, j = 0, len = bp.length; i < len; i+=2, j++){
+					var str = '<div class="bomb" style="left:' + bp[i] + 'px;top:'
+						+ bp[i+1] + 'px;" b-n="' + (j+1) + '">' +
+	  					'<img class="b-body-part" width="100%" /><img class="b-explo-part" width="100%" /></div>';
+					stage4El.append(str);
 				}
-				var next = 1;
-				// game transform logic
-				switch(this.currentStage){
-					case 1:
-						this._getProcess(this.currentStage).stop();
-						next = 4;
-						window.stageTimebar = TimeBar.getInstanceById('sketchSecond');
-						stageTimebar.setSecond(20);
-						stageTimebar.resetBar();
-						stageTimebar.doStart(function(){
-							gamer.bombStopAll();
-						});
-						gamer.bombStart();
-						break;
-				}
-				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').hide();
-				// transform animation or not
-				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + next + ']').show();
+
+				$(".b-body-part").attr('src', scope._bombSrc);
+
+				$(".b-body-part").click(function(){
+					var bombBody = $(this);
+					bombBody.attr('src', scope._exploSrc);
+					setTimeout((function(bb){
+						return function(){ 
+							var id = bb.parent().attr("b-n");
+							if(id){
+								scope.stop(id);
+								bb.attr('src', scope._bombSrc);
+								// bb.show();
+								// eb.hide();
+							}
+						};
+					})(bombBody), 400);
+				});
+
+				var tb = this._timebar = TimeBar.getInstanceById('sketchSecond');
+				tb.setSecond(this._limitSeconds);
 			},
-			bombStart: function(){
+			start:function(){
 				if(!this._processInterval && !this._showInterval){
 					this._showInterval = {};
 					this.__showCacheTempMaps = {};
@@ -321,23 +398,27 @@
 						return function(){	
 							var idx = scope._getValidIndex();
 							if(idx != -1){
-								console.log("validIndex: " + idx);
+								// console.log("validIndex: " + idx);
 								var itemId = scope._bombProcessAll.splice(idx, 1)[0];
-								console.log("get Item id: " + itemId);
+								// console.log("get Item id: " + itemId);
 								scope._bombShowing.push(itemId);
 								$(scope.__showCacheTempMaps[itemId]).show();
 								// $("[" + scope._bombAttrSelector + "=" + itemId + "]").show();
 								scope._showInterval[itemId] = setTimeout((function(id, outerScope){
-									return function(){
-										outerScope.bombStop(id);
+									return function(){ 
+										if(id) outerScope.stop(id);
 									}
 								})(itemId, scope), s * 1000);
 							}
 						};
 					})(this, this._showSeconds), this._showSeconds * 1000 / 5);	
+					this._timebar.resetBar();
+					this._timebar.doStart((function(scope){
+						return function(){ scope.stop(); };
+					})(this));
 				}
 			},
-			bombStop: function(itemId){
+			stop:function(itemId){
 				var showingIndex = this._bombShowing.indexOf(itemId);
 				if(showingIndex != -1 && this._showInterval[itemId]){
 					clearInterval(this._showInterval[itemId]);
@@ -346,73 +427,96 @@
 					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
 					// back to all
 					this._bombShowing.splice(showingIndex, 1);
-					console.log("stop and push: " + itemId);
+					// console.log("stop and push: " + itemId);
 					this._bombProcessAll.push(itemId);
-				}	
-			},
-			bombStopAll: function(){
-				$(this._bombSelector).hide();
-				clearInterval(this._processInterval);
-				for(var i in this._showInterval){
-					clearInterval(this._showInterval[i]);
+				}else{
+					$(this._bombSelector).hide();
+					clearInterval(this._processInterval);
+					for(var i in this._showInterval){
+						clearInterval(this._showInterval[i]);
+					}
+					// console.log("stop all");
+					this._processInterval = null;
+					this._showInterval = null;
+					this.__showCacheTempMaps = null;
+					this._bombProcessAll = [];
+					this._bombShowing = [];	
 				}
-				this._processInterval = null;
-				this._showInterval = null;
-				this.__showCacheTempMaps = null;
-				this._bombProcessAll = [];
-				this._bombShowing = [];
 			}
 		};
 
-		var bombPositions = [
-			280, 365, 160, 380, 356, 315, 420, 375, 590, 315, 500, 235, 400, 255,
-			240, 350, 235, 385, 105, 385, 190, 382, 120, 365, 324, 300, 261, 285,
-			288, 260, 570, 288, 535, 310, 480, 290, 485, 315, 480, 246, 525, 278,
-			455, 239, 440, 258, 468, 277, 312, 276, 315, 250, 385, 310, 333, 360,
-			323, 380, 358, 375, 386, 389, 386, 359, 409, 329, 414, 288, 383, 282,
-			359, 279, 359, 244, 292, 311, 572, 348, 445, 305
-		];
-		var bombSrc = "images/04-bomb9.png";
-		var exploSrc = "images/04-explosion.gif";
+		window.gamer = {
+			_registerStages: [1, 2, 3, 4],
+			_stageElSelector: ".stage",
+			_stageNamePrefix: "stage_",
+			_stageNumberRex: new RegExp("stage_(.*)"),
+			_stageSelectProperty: "id",
+			currentStage: 1,
+			_getProcess: function(stage){
+				return window["stage" + stage + "Process"];
+			},
+			// [ 'stage_1', '1', index: 0, input: 'stage_1' ]
+			_findStage:function(el){
+				var parentEl = $(el).parents(this._stageElSelector);
+				if(parentEl){
+					var prop = $(parentEl).attr(this._stageSelectProperty);
+					var number = this._stageNumberRex.test(prop) ? prop.match(this._stageNumberRex)[1] : null;
+					if(number) this.currentStage = number;
+				}
+			},
+			initProcess:function(){
+				var r = this._registerStages,
+					i = 0,
+					len = r.length;
+				for(; i < len; i++){
+					this._getProcess(r[i]).init();
+				}
+			},
+			forceToStage: function(name){
+				var currentProcess = this._getProcess(this.currentStage);
+				if(currentProcess) currentProcess.stop();
+
+				this.currentStage = name;
+				// currentProcess.init();
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + ']').hide();
+				// $('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').show();
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').fadeIn();
+				currentProcess.start();
+			},
+			toNext: function(){
+				if(typeof this.currentStage == 'undefined' || this.currentStage == null){
+					// ???
+				}
+				var next = 1;
+				// game transform logic
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').hide();
+				switch(this.currentStage){
+					case 1:
+					case 2:
+					case 3:
+						this._getProcess(this.currentStage).stop();
+						this.currentStage++;
+						this._getProcess(this.currentStage).start();
+						break;
+				}
+				// transform animation or not
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').show();
+			}
+		};
+
 		$(window).load(function(){
 
-			var stage4El = $('#stage_4');
-			for(var i = 0, j = 0, len = bombPositions.length; i < len; i+=2, j++){
-				var str = '<div class="bomb" style="left:' + bombPositions[i] + 'px;top:'
-					+ bombPositions[i+1] + 'px;" b-n="' + (j+1) + '">' +
-  					'<img class="b-body-part" width="100%" /><img class="b-explo-part" width="100%" /></div>';
-				stage4El.append(str);
-			}
-
+			gamer.initProcess();
 
 			$(".next-stage").click(function(){
 				gamer.toNext();
 			});
-
-			$(".b-body-part").attr('src', bombSrc);
-
-			//  src="images/04-explosion.gif" 
-			$(".b-body-part").click(function(){
-				var bombBody = $(this);
-				// var exploBody = $(this).next();
-				// exploBody.attr('src', "images/04-explosion.gif");
-				// bombBody.hide();
-				// exploBody.show();
-				bombBody.attr('src', exploSrc);
-				setTimeout((function(bb){
-					return function(){ 
-						gamer.bombStop($(bb).parent().attr("b-n"));
-						bb.attr('src', bombSrc);
-						// bb.show();
-						// eb.hide();
-					};
-				})(bombBody), 400);
-			});
-
 		});
 
 		$(document.body).ready(function(){
-			gamer.forceToStage(1);
+			setTimeout(function(){
+				gamer.forceToStage(1);
+			},300);
 		});
   	</script>
   </head>
@@ -420,19 +524,29 @@
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
   	<div id="stage_1" class="stage stage-intro">
   		<div class="intro-dragon">
-  			<img src="images/01-intro-dragon.gif" width="100%;">
+  			<img src="images/01-intro-dragon.gif" width="100%" />
   		</div>
   		<div class="intro-girl">
-  			<img src="images/01-intro-girl.gif" width="100%;">
+  			<img src="images/01-intro-girl.gif" width="100%" />
   		</div>
-  		<!-- <div class="intro-firework">
-  			<img src="images/01-intro-firework.gif" width="100%;">
-  		</div> -->
-  		<div class="next-stage button-intro-enter" onclick=""></div>
+  		<div class="next-stage button-intro-enter"></div>
   	</div>
-  	<script type="text/javascript">
-  		stage1Process.init();
-  	</script>
+  	<div id="stage_2" class="stage stage-message">
+  		<div class="message-dialog">
+  			<img src="images/02-message-dialog.png" width="100%" />
+  		</div>
+  		<div class="message-oldman">
+  			<img src="images/02-message-oldman.gif" width="100%" />
+  		</div>
+  		<div class="message-text font-zhuin"></div>
+  	</div>
+  	<div id="stage_3" class="stage stage-rules">
+  		<div class="rules-oldman">
+  			<img src="images/02-message-oldman.gif" width="100%" />
+  		</div>
+  		<div class="next-stage button-rules-enter"></div>
+  		<div class="rules-text font-zhuin"></div>
+  	</div>
   	<div id="stage_4" class="stage stage-bomb">
   		<div class="timebar">
   			<div class="HP_bar"> 

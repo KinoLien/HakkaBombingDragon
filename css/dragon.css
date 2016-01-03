@@ -106,15 +106,28 @@ body{
 }
 
 .stage-intro{
-  background-image:url(../images/01-intro.png);
+  background-image:url(../images/01-intro-back.png);
 }
+
+.stage-message{
+  background-image: url(../images/02-message-background.png);
+}
+
+.stage-rules{
+  background-image: url(../images/03-rules-background.jpg);
+}
+
+.stage-bomb{
+  background-image: url(../images/04-background.jpg);
+}
+
 
 .intro-dragon{
   position: absolute;
   left: 93px;
   top: 35px;
   width: 440px;
-  height: 460px;  
+  /*height: 460px;  */
 }
 
 .intro-girl{
@@ -122,7 +135,7 @@ body{
   left: 410px;
   top: 330px;
   width: 130px;
-  height: 140px; 
+  /*height: 140px; */
 }
 
 .intro-firework{
@@ -134,13 +147,57 @@ body{
   /*background: black;*/
 }
 
-.stage-bomb{
-  background-image: url(../images/04-background.jpg);
+.message-oldman, .rules-oldman{
+  position: absolute;
+  left: 560px;
+  top: 227px;
+  width: 235px;
+}
+
+.message-dialog{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  display: none;
+}
+
+.message-text{
+  position: absolute;
+  left: 156px;
+  top: 148px;
+  width: 384px;
+  height: 291px;
+  font-size: 24px;
+  padding-left: 8px;
+  /*background: black;*/
+}
+
+.rules-text{
+  position: absolute;
+  left: 105px;
+  top: 118px;
+  width: 444px;
+  height: 296px;
+  font-size: 24px;
+  padding-left: 8px;
+  color: #ececec;
+}
+
+
+.next-stage{
+  cursor:pointer;
+  position:absolute;
+}
+
+.button-rules-enter{
+  left: 259px;
+  top: 515px;
+  width: 277px;
+  height: 69px;
 }
 
 .button-intro-enter{  
-  cursor:pointer;
-  position:absolute;
   left:272px;
   top:500px;
   width:277px;
