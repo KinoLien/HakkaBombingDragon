@@ -237,6 +237,29 @@ div[class^=bomb]{
   display: none;
 }
 
+.b-counter, .score-counter{
+  position: absolute;
+  height: 22px;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 2.6px;
+  text-align: right;
+}
+
+.b-counter{
+  width: 30px;
+  left: 253px;
+  top: 55px;
+}
+
+.score-counter{
+  width:100px;
+  left: 355px;
+  top: 55px;
+}
+
+
+
 .ballman{
   position: absolute;
   left: 160px;

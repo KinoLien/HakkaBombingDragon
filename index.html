@@ -168,6 +168,7 @@
 		  					'<img width="100%" /></div>';
 						stage1El.append(str);
 					}
+
 					this._hasInitialized = true;
 				}
 			},
@@ -175,13 +176,13 @@
 				if(!this._processInterval && !this._showInterval){
 					this._showInterval = {};
 					this._showCacheTempMaps = {};
-					$(".intro-firework").each((function(scope){
-						return function(i,item){
-							var id = item.getAttribute('f-n');
-							scope._showCacheTempMaps[id] = item;
-							scope._fireworkProcessAll.push(id);
-						};
-					})(this));
+					var fws = document.querySelectorAll(".intro-firework");
+					for(var i = 0, len = fws.length; i < len; i++){
+						var item = fws[i];
+						var id = item.getAttribute('f-n');
+						this._showCacheTempMaps[id] = item;
+						this._fireworkProcessAll.push(id);
+					}
 					this._processInterval = setInterval((function(scope){
 						return function(){	
 							var imageUrl = "images/01-intro-firework.gif";
@@ -606,7 +607,8 @@
   		<div class="dragon-head">
   			<img src="images/04-head.png" width="100%;">
   		</div>
-  		
+  		<div class="b-counter">0</div>
+  		<div class="score-counter">00000</div>
   	</div>
   </body>
 </html>
