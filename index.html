@@ -532,7 +532,7 @@
 			var c = getCookie("_hakka");
 			var isft = (c && c == "yes");
 			createCookie("_hakka", "yes", 365);
-			return isft;
+			return !isft;
 		})();
 
 		$(window).load(function(){
