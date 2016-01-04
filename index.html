@@ -537,8 +537,6 @@
 
 		$(window).load(function(){
 
-			gamer.initProcess();
-
 			$(".next-stage").click(function(){
 				gamer.toNext();
 			});
@@ -546,6 +544,7 @@
 
 		$(document.body).ready(function(){
 			$(".prepare").empty();
+			gamer.initProcess();
 			setTimeout(function(){
 				gamer.forceToStage(1);
 			},600 + (isFirstTime? 2200 : 0));
