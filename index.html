@@ -145,9 +145,9 @@
 			_showInterval: null,
 			_fireworkProcessAll: [],
 			_fireworkShowing: [],
-			_fireworkPositions: [
-				120, 20, 348, 0, 590, 0, 385, 210, 320, 369, 590, 260
-			],
+			// _fireworkPositions: [
+			// 	120, 20, 348, 0, 590, 0, 385, 210, 320, 369, 590, 260
+			// ],
 			_hasInitialized: false,
 			_getValidIndex: function(){
 				var min = 0,
@@ -160,14 +160,14 @@
 			},
 			init: function(){
 				if(this._hasInitialized == false){
-					var stage1El = $('#stage_1');
-					var fp = this._fireworkPositions;
-					for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
-						var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
-							+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
-		  					'<img width="100%" /></div>';
-						stage1El.append(str);
-					}
+					// var stage1El = $('#stage_1');
+					// var fp = this._fireworkPositions;
+					// for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
+					// 	var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
+					// 		+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
+		  	// 				'<img width="100%" /></div>';
+					// 	stage1El.append(str);
+					// }
 
 					this._hasInitialized = true;
 				}
@@ -547,7 +547,7 @@
 		$(document.body).ready(function(){
 			setTimeout(function(){
 				gamer.forceToStage(1);
-			},600 + isFirstTime? 2200 : 0);
+			},600 + (isFirstTime? 2200 : 0));
 		});
   	</script>
   </head>
@@ -569,6 +569,27 @@
   			<img src="images/01-intro-girl.gif" width="100%" />
   		</div>
   		<div class="next-stage button-intro-enter"></div>
+
+  		<!-- for the bugs -->
+  		<div class="intro-firework" style="left: 120px; top: 20px; display: none;" f-n="1">
+  			<img width="100%" src="images/01-intro-firework-stop.png">
+  		</div>
+  		<div class="intro-firework" style="left: 348px; top: 0px; display: none;" f-n="2">
+  			<img width="100%" src="images/01-intro-firework-stop.png">
+  		</div>
+  		<div class="intro-firework" style="left: 590px; top: 0px; display: none;" f-n="3">
+  			<img width="100%" src="images/01-intro-firework-stop.png">
+  		</div>
+  		<div class="intro-firework" style="left: 385px; top: 210px; display: none;" f-n="4">
+  			<img width="100%" src="images/01-intro-firework-stop.png">
+  		</div>
+  		<div class="intro-firework" style="left: 320px; top: 369px; display: none;" f-n="5">
+  			<img width="100%" src="images/01-intro-firework-stop.png">
+  		</div>
+  		<div class="intro-firework" style="left: 590px; top: 260px; display: none;" f-n="6">
+  			<img width="100%" src="images/01-intro-firework-stop.png">
+  		</div>
+
   	</div>
   	<div id="stage_2" class="stage stage-message">
   		<div class="message-dialog">
