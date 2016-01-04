@@ -213,18 +213,7 @@
 				var showingIndex;
 				if(!this._hasInitialized) return;
 				var imageUrl = "images/01-intro-firework-stop.png";
-				if(itemId && (showingIndex = this._fireworkShowing.indexOf(itemId)) != -1 && this._showInterval[itemId]){
-					clearInterval(this._showInterval[itemId]);
-					this._showInterval[itemId] = null;
-					$(this._showCacheTempMaps[itemId]).hide();
-					$(this._showCacheTempMaps[itemId]).children(":first-child").attr('src', imageUrl);
-					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
-					// back to all
-					this._fireworkShowing.splice(showingIndex, 1);
-					// console.log("stop and push: " + itemId);
-					this._fireworkProcessAll.push(itemId);
-					// console.log(this._fireworkProcessAll);
-				}else{
+				if(typeof itemId == 'undefined'){
 					$(".intro-firework").hide();
 					$(".intro-firework").children(":first-child").attr('src', imageUrl);
 					clearInterval(this._processInterval);
@@ -236,6 +225,17 @@
 					this._showCacheTempMaps = null;
 					this._fireworkProcessAll = [];
 					this._fireworkShowing = [];
+				}else if((showingIndex = this._fireworkShowing.indexOf(itemId)) != -1 && this._showInterval[itemId]){
+					clearInterval(this._showInterval[itemId]);
+					this._showInterval[itemId] = null;
+					$(this._showCacheTempMaps[itemId]).hide();
+					$(this._showCacheTempMaps[itemId]).children(":first-child").attr('src', imageUrl);
+					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
+					// back to all
+					this._fireworkShowing.splice(showingIndex, 1);
+					// console.log("stop and push: " + itemId);
+					this._fireworkProcessAll.push(itemId);
+					// console.log(this._fireworkProcessAll);
 				}
 			}
 		};
@@ -366,6 +366,10 @@
 
 				$(".b-body-part").click(function(){
 					var bombBody = $(this);
+					var hasClicked = bombBody.attr('is-clicked');
+					// console.log(hasClicked);
+					if(hasClicked == 'true') return false;
+					bombBody.attr('is-clicked', true);
 					bombBody.attr('src', scope._exploSrc);
 					setTimeout((function(bb){
 						return function(){ 
@@ -373,6 +377,7 @@
 							if(id){
 								scope.stop(id);
 								bb.attr('src', scope._bombSrc);
+								bb.attr('is-clicked', false);
 								// bb.show();
 								// eb.hide();
 							}
@@ -419,17 +424,8 @@
 				}
 			},
 			stop:function(itemId){
-				var showingIndex = this._bombShowing.indexOf(itemId);
-				if(showingIndex != -1 && this._showInterval[itemId]){
-					clearInterval(this._showInterval[itemId]);
-					this._showInterval[itemId] = null;
-					$(this.__showCacheTempMaps[itemId]).hide();
-					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
-					// back to all
-					this._bombShowing.splice(showingIndex, 1);
-					// console.log("stop and push: " + itemId);
-					this._bombProcessAll.push(itemId);
-				}else{
+				var showingIndex;
+				if(typeof itemId == 'undefined'){
 					$(this._bombSelector).hide();
 					clearInterval(this._processInterval);
 					for(var i in this._showInterval){
@@ -441,6 +437,15 @@
 					this.__showCacheTempMaps = null;
 					this._bombProcessAll = [];
 					this._bombShowing = [];	
+				}else if((showingIndex = this._bombShowing.indexOf(itemId)) != -1 && this._showInterval[itemId]){
+					clearInterval(this._showInterval[itemId]);
+					this._showInterval[itemId] = null;
+					$(this.__showCacheTempMaps[itemId]).hide();
+					// $("[" + this._bombAttrSelector + "=" + itemId + "]").hide();
+					// back to all
+					this._bombShowing.splice(showingIndex, 1);
+					// console.log("stop and push: " + itemId);
+					this._bombProcessAll.push(itemId);
 				}
 			}
 		};
@@ -504,6 +509,30 @@
 			}
 		};
 
+		
+
+		window.isFirstTime = (function(){
+			function getCookie(name) {
+				var value = "; " + document.cookie;
+				var parts = value.split("; " + name + "=");
+				if (parts.length == 2) return parts.pop().split(";").shift();
+				return null;
+			}
+			function createCookie(name,value,days) {
+			    if (days) {
+			        var date = new Date();
+			        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			        var expires = "; expires=" + date.toGMTString();
+			    }
+			    else var expires = "";
+			    document.cookie = name + "=" + value + expires + "; path=/";
+			}
+			var c = getCookie("_hakka");
+			var isft = (c && c == "yes");
+			createCookie("_hakka", "yes", 365);
+			return isft;
+		})();
+
 		$(window).load(function(){
 
 			gamer.initProcess();
@@ -516,12 +545,20 @@
 		$(document.body).ready(function(){
 			setTimeout(function(){
 				gamer.forceToStage(1);
-			},300);
+			},600 + isFirstTime? 2200 : 0);
 		});
   	</script>
   </head>
   <body>
+  	<div class="prepare-zhuin">
+  		<span class="font-zhuin">一二三四五六七八九十</span>
+  		<span class="font-zhuin-poin1">著被數</span>
+  		<span class="font-zhuin-poin2">著數</span>
+  	</div>
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
+  	<div id="stage_prepare" class="stage stage-loading" style="display:block;">
+  		Loading...
+  	</div>
   	<div id="stage_1" class="stage stage-intro">
   		<div class="intro-dragon">
   			<img src="images/01-intro-dragon.gif" width="100%" />

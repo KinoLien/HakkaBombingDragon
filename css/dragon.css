@@ -97,12 +97,24 @@ body{
   font-family: 'DFPYuan-W5-PoIn2-BFW';
 }
 
+.prepare-zhuin{
+  position: absolute;
+  width:100px;
+  height:100px;
+  left:-100px;
+  top:-100px;
+}
+
 .stage{
   width:800px;
   height:600px;
   position: relative;
-  margin:auto;
+  margin: auto;
   display: none;
+}
+
+.stage-loading{
+  /*background:black;*/
 }
 
 .stage-intro{
