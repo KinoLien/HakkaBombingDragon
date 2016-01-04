@@ -188,6 +188,7 @@
 							var imageUrl = "images/01-intro-firework.gif";
 
 							var processFn = function(startStamp){
+								var scope = this;
 								return function(){
 									var idx = scope._getValidIndex();
 									var itemId = scope._fireworkProcessAll.splice(idx, 1)[0];
@@ -204,8 +205,8 @@
 								};
 							};
 
-							setTimeout(processFn(100), 100);
-							setTimeout(processFn(100), 100);
+							setTimeout(processFn.call(scope, 100), 100);
+							setTimeout(processFn.call(scope, 100), 100);
 						};
 					})(this), 1000);	
 				}
