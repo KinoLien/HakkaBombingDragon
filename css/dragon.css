@@ -97,13 +97,19 @@ body{
   font-family: 'DFPYuan-W5-PoIn2-BFW';
 }
 
-.prepare-zhuin{
+.prepare{
   position: absolute;
   width:100px;
   height:100px;
   left:-100px;
   top:-100px;
 }
+
+.prepare img{
+  position: absolute;
+  left: 0; top:0;
+}
+
 
 .stage{
   width:800px;
@@ -118,7 +124,7 @@ body{
 }
 
 .stage-intro{
-  background-image:url(../images/01-intro-back.png);
+  /*background-image:url(../images/01-intro-back.png);*/
 }
 
 .stage-message{
@@ -133,6 +139,13 @@ body{
   background-image: url(../images/04-background.jpg);
 }
 
+
+.intro-back{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
 
 .intro-dragon{
   position: absolute;
@@ -249,13 +262,13 @@ div[class^=bomb]{
 .b-counter{
   width: 30px;
   left: 253px;
-  top: 55px;
+  top: 42px;
 }
 
 .score-counter{
-  width:100px;
-  left: 355px;
-  top: 55px;
+  width: 100px;
+  left: 357px;
+  top: 42px;
 }
 
 

@@ -145,9 +145,9 @@
 			_showInterval: null,
 			_fireworkProcessAll: [],
 			_fireworkShowing: [],
-			// _fireworkPositions: [
-			// 	120, 20, 348, 0, 590, 0, 385, 210, 320, 369, 590, 260
-			// ],
+			_fireworkPositions: [
+				120, 20, 348, 0, 590, 0, 385, 210, 320, 369, 590, 260
+			],
 			_hasInitialized: false,
 			_getValidIndex: function(){
 				var min = 0,
@@ -160,14 +160,14 @@
 			},
 			init: function(){
 				if(this._hasInitialized == false){
-					// var stage1El = $('#stage_1');
-					// var fp = this._fireworkPositions;
-					// for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
-					// 	var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
-					// 		+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
-		  	// 				'<img width="100%" /></div>';
-					// 	stage1El.append(str);
-					// }
+					var stage1El = $('#stage_1');
+					var fp = this._fireworkPositions;
+					for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
+						var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
+							+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
+		  					'<img width="100%" /></div>';
+						stage1El.append(str);
+					}
 
 					this._hasInitialized = true;
 				}
@@ -545,6 +545,7 @@
 		});
 
 		$(document.body).ready(function(){
+			$(".prepare").empty();
 			setTimeout(function(){
 				gamer.forceToStage(1);
 			},600 + (isFirstTime? 2200 : 0));
@@ -552,16 +553,23 @@
   	</script>
   </head>
   <body>
-  	<div class="prepare-zhuin">
+  	<div class="prepare">
   		<span class="font-zhuin">一二三四五六七八九十</span>
   		<span class="font-zhuin-poin1">著被數</span>
   		<span class="font-zhuin-poin2">著數</span>
+  		<img width="100%" src="images/01-intro-firework-stop.png"/>
+  		<img width="100%" src="images/01-intro-firework.gif"/>
+  		<img width="100%" src="images/04-bomb9.png"/>
+  		<img width="100%" src="images/04-explosion.gif"/>
   	</div>
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
   	<div id="stage_prepare" class="stage stage-loading" style="display:block;">
   		Loading...
   	</div>
   	<div id="stage_1" class="stage stage-intro">
+  		<div class="intro-back">
+  			<img src="images/01-intro-back.png" width="100%" />
+  		</div>
   		<div class="intro-dragon">
   			<img src="images/01-intro-dragon.gif" width="100%" />
   		</div>
@@ -571,7 +579,7 @@
   		<div class="next-stage button-intro-enter"></div>
 
   		<!-- for the bugs -->
-  		<div class="intro-firework" style="left: 120px; top: 20px; display: none;" f-n="1">
+  		<!-- <div class="intro-firework" style="left: 120px; top: 20px; display: none;" f-n="1">
   			<img width="100%" src="images/01-intro-firework-stop.png">
   		</div>
   		<div class="intro-firework" style="left: 348px; top: 0px; display: none;" f-n="2">
@@ -588,7 +596,7 @@
   		</div>
   		<div class="intro-firework" style="left: 590px; top: 260px; display: none;" f-n="6">
   			<img width="100%" src="images/01-intro-firework-stop.png">
-  		</div>
+  		</div> -->
 
   	</div>
   	<div id="stage_2" class="stage stage-message">
@@ -629,8 +637,8 @@
   		<div class="dragon-head">
   			<img src="images/04-head.png" width="100%;">
   		</div>
-  		<div class="b-counter">0</div>
-  		<div class="score-counter">00000</div>
+  		<div class="font-zhuin b-counter">0</div>
+  		<div class="font-zhuin score-counter">00000</div>
   	</div>
   </body>
 </html>
