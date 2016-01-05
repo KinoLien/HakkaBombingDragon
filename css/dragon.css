@@ -29,6 +29,26 @@
     url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.svg') format('svg'); /* Legacy iOS */  font-weight: normal;
   font-style: normal;
 }
+
+.blur{
+  transform: matrix3d(1, 0, 0, 0,
+                      0, 1, 0, 0,
+                      0, 0, 1, 0,
+                      0, 0, 0, 0.3);
+  background-size: 0 0;
+}
+.blur:before{
+  transform: scale(0.3);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: '';  
+  background-image: inherit;
+  background-size: contain;
+  background-repeat: inherit;
+}
 /*.glyphicon {
   position: relative;
   top: 1px;
@@ -117,6 +137,7 @@ body{
   position: relative;
   margin: auto;
   display: none;
+  /*overflow: hidden;*/
 }
 
 .stage-loading{
@@ -124,7 +145,12 @@ body{
 }
 
 .stage-intro{
-  /*background-image:url(../images/01-intro-back.png);*/
+  /*background-image:url(../images/01-intro-back.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  position: absolute;*/
 }
 
 .stage-message{
@@ -136,7 +162,7 @@ body{
 }
 
 .stage-bomb{
-  background-image: url(../images/04-background.jpg);
+  background-image: url(../images/04-background.png);
 }
 
 
@@ -251,8 +277,9 @@ div[class^=bomb]{
 }
 
 .b-counter, .score-counter{
+  color: #561a13;
   position: absolute;
-  height: 22px;
+  /*height: 22px;*/
   font-size: 22px;
   font-weight: bold;
   letter-spacing: 2.6px;
@@ -260,18 +287,88 @@ div[class^=bomb]{
 }
 
 .b-counter{
-  width: 30px;
-  left: 253px;
+  width: 40px;
+  left: 417px;
   top: 42px;
 }
 
 .score-counter{
   width: 100px;
-  left: 357px;
+  left: 197px;
   top: 42px;
 }
 
+.info-text{
+  color: #561a13;
+  position: absolute;
+  font-size: 20px;
+  text-align: center;
+  top: 43px;
+}
 
+.level-name{  
+  width: 100px;
+  left: 22px;
+}
+
+.score-counter-name{
+  width: 70px;
+  left: 135px;
+}
+
+.b-counter-name{
+  width: 100px;
+  left: 322px;
+}
+
+.b-transform{
+  display: none;
+  position: absolute;
+  width: 400px;
+  height: 100px;
+  left: 197px;
+  top: 331px;
+}
+
+.b-next-button{
+  background: url(../images/04-next-button.png) no-repeat center;
+  display: none;
+  margin: 0 auto;
+  width:370px;
+  height: 82px;
+  cursor: pointer;
+}
+
+.b-again-button{
+  background: url(../images/04-again-button.png) no-repeat center;
+  display: none;
+  margin: 0 auto;
+  width: 280px;
+  height: 82px;
+  cursor: pointer;
+}
+
+.next, .again{
+  display: block !important;
+}
+.next .b-next-button,
+.again .b-again-button{
+  display: block;
+}
+
+.b-next-button-text, .b-again-button-text{
+  color: #561a13;
+  padding: 3px;
+  /*position: absolute;*/
+  font-size: 31px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.timebar-name{
+  width: 70px;
+  left: 481px;
+}
 
 .ballman{
   position: absolute;
