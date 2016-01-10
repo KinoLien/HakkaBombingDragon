@@ -174,42 +174,40 @@
 				}
 			},
 			start: function(){
-				if(!this._processInterval && !this._showInterval){
-					this._showInterval = {};
-					this._showCacheTempMaps = {};
+				var scope = this;
+				if(!scope._processInterval && !scope._showInterval){
+					scope._showInterval = {};
+					scope._showCacheTempMaps = {};
 					var fws = document.querySelectorAll(".intro-firework");
 					for(var i = 0, len = fws.length; i < len; i++){
 						var item = fws[i];
 						var id = item.getAttribute('f-n');
-						this._showCacheTempMaps[id] = item;
-						this._fireworkProcessAll.push(id);
+						scope._showCacheTempMaps[id] = item;
+						scope._fireworkProcessAll.push(id);
 					}
-					this._processInterval = setInterval((function(scope){
-						return function(){	
-							var imageUrl = "images/01-intro-firework.gif";
 
-							var processFn = function(startStamp){
-								var scope = this;
+					function processFn(startStamp){
+						var imageUrl = "images/01-intro-firework.gif";
+						return function(){
+							var idx = scope._getValidIndex();
+							var itemId = scope._fireworkProcessAll.splice(idx, 1)[0];
+							scope._fireworkShowing.push(itemId);
+							$(scope._showCacheTempMaps[itemId]).show();
+							$(scope._showCacheTempMaps[itemId]).children(":first-child").attr('src', imageUrl);
+							scope._showInterval[itemId] = setTimeout((function(id, outerScope){
 								return function(){
-									var idx = scope._getValidIndex();
-									var itemId = scope._fireworkProcessAll.splice(idx, 1)[0];
-									scope._fireworkShowing.push(itemId);
-									$(scope._showCacheTempMaps[itemId]).show();
-									$(scope._showCacheTempMaps[itemId]).children(":first-child").attr('src', imageUrl);
-									scope._showInterval[itemId] = setTimeout((function(id, outerScope){
-										return function(){
-											outerScope.stop(id);
-											// console.log(id + " stop show");
-										}
-									})(itemId, scope), startStamp + 800);
-									// console.log(itemId + " start show");
-								};
-							};
-
-							setTimeout(processFn.call(scope, 100), 100);
-							setTimeout(processFn.call(scope, 100), 100);
+									outerScope.stop(id);
+									// console.log(id + " stop show");
+								}
+							})(itemId, scope), startStamp + 800);
+							// console.log(itemId + " start show");
 						};
-					})(this), 1000);	
+					}
+
+					this._processInterval = setInterval(function(){
+						scope._showInterval["one"] = setTimeout(processFn(100), 100);
+						scope._showInterval["two"] = setTimeout(processFn(100), 100);
+					}, 1000);	
 				}
 			},
 			stop: function(itemId){
@@ -350,6 +348,8 @@
 			_bombNumbers: 0,
 			_hasInitialized: false,
 			_forceToJump: false,
+			_movePerson: false,
+			_moveOldman: false,
 			_getValidIndex: function() {
 				var min = 0,
 					len = this._bombProcessAll.length,
@@ -712,12 +712,16 @@
 						return o.comment;
 					}
 				}
+				return "";
 			},
 			init:function(){
 				if(this._hasInitialized == false){
 					var stageEl = $('#stage_6');
 					this._textDom = stageEl.children(".results-comment");
 					this._scoreDom = stageEl.children(".results-score");
+					$('.results-next').click(function(){
+						gamer.toNext();
+					});
 					this._hasInitialized = true;
 				}
 			},
@@ -754,8 +758,25 @@
 			}
 		};
 
+		window.stage7Process = {
+			_hasInitialized: false,
+			init:function(){
+				if(this._hasInitialized == false){
+
+					$('.leader-confirm').click(function(){
+						// gamer.toNext();
+						gamer.replay();
+					});
+
+					this._hasInitialized = true;
+				}
+			},
+			start:function(){},
+			stop:function(){}
+		};
+
 		window.gamer = {
-			_registerStages: [1, 2, 3, 4, 5, 6],
+			_registerStages: [1, 2, 3, 4, 5, 6, 7],
 			_stageElSelector: ".stage",
 			_stageNamePrefix: "stage_",
 			_stageNumberRex: new RegExp("stage_(.*)"),
@@ -787,18 +808,20 @@
 				$(".b-score-counter").text(this._totalScore);
 			},
 			forceToStage: function(name){
-				var currentProcess = this._getProcess(this.currentStage);
-				if(currentProcess) currentProcess.stop();
-
+				// var currentProcess = this._getProcess(this.currentStage);
+				// if(currentProcess) currentProcess.stop();
+				this._getProcess(this.currentStage).stop();
 				this.currentStage = name;
 				// currentProcess.init();
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + ']').hide();
-				// $('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').show();
-				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').fadeIn({
-					complete:function(){
-						currentProcess.start();
-					}
-				});
+				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').show();
+				this._getProcess(this.currentStage).start();
+				// currentProcess.start();
+				// $('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + name + ']').fadeIn({
+				// 	complete:function(){
+				// 		currentProcess.start();
+				// 	}
+				// });
 			},
 			toNext: function(){
 				if(typeof this.currentStage == 'undefined' || this.currentStage == null){
@@ -810,7 +833,12 @@
 				this._getProcess(this.currentStage).stop();
 				switch(this.currentStage){
 					case 1:
+						// for debug
+						// this.currentStage = 6;
+						// nextObj = this._getProcess(this.currentStage);
+						// break;
 					case 2:
+					case 6:
 						nextObj = this._getProcess(++this.currentStage);
 						break;
 					case 3:
@@ -870,6 +898,7 @@
 			replay:function(){
 				this._bombNumbers = 0;
 				this._totalScore = 0;
+				this._cacheScore = 0;
 				this._bombStageTimes = 1;
 				this.forceToStage(1);
 			}
@@ -1046,9 +1075,128 @@
   		<div class="results-oldman">
   			<img src="images/02-message-oldman-2.gif" width="100%" />
   		</div>
+  		<div class="results-next">
+  			<img src="images/02-message-next.png" width="100%" />
+  		</div>
   		<div class="font-zhuin results-score"></div>
   		<div class="font-zhuin results-comment"></div>
   	</div>
-  	<div id="stage_7" class="stage stage-results"></div>
+  	<div id="stage_7" class="stage stage-leader">
+  		<div class="leader-confirm"></div>
+
+  		<div class="leader-wrap">
+  			<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">1.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">2.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">3.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">4.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">5.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">6.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">7.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">8.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">9.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="leader-tuple">
+	  			<table>
+	  				<tr>
+	  					<td class="leader-order">10.</td>
+	  					<td class="leader-name"><u>你是哪位</u></td>
+	  					<td class="leader-score">00100</td>
+	  					<td class="leader-score-text">分</td>
+	  					<td class="leader-time">2016/01/02</td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		
+  		</div>
+  	</div>
   </body>
 </html>
