@@ -161,13 +161,14 @@
 			init: function(){
 				if(this._hasInitialized == false){
 					var stage1El = $('#stage_1');
-					var fp = this._fireworkPositions;
-					for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
-						var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
-							+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
-		  					'<img width="100%" /></div>';
-						stage1El.append(str);
-					}
+					// comment for the bugs
+					// var fp = this._fireworkPositions;
+					// for(var i = 0, j = 0, len = fp.length; i < len; i+=2, j++){
+					// 	var str = '<div class="intro-firework" style="left:' + fp[i] + 'px;top:'
+					// 		+ fp[i+1] + 'px;" f-n="' + (j+1) + '">' +
+		  	// 				'<img width="100%" /></div>';
+					// 	stage1El.append(str);
+					// }
 
 					this._hasInitialized = true;
 				}
@@ -250,7 +251,12 @@
 			init:function(){
 				if(this._hasInitialized == false){
 					var stageEl = $('#stage_2');
-					this._textDom = stageEl.children(":last-child");
+					this._textDom = stageEl.children(".message-text");
+
+					$('.message-next').click(function(){
+						gamer.toNext();
+					});
+
 					this._hasInitialized = true;
 				}
 			},
@@ -269,11 +275,11 @@
 							})(text[i], scope._textDom), (i+1) * 200);
 
 							// automatically jump
-							if(i + 1 == len){
-								scope._showInterval["auto"] = setTimeout(function(){
-									gamer.toNext();		
-								}, i * 200 + 4000);
-							}
+							// if(i + 1 == len){
+							// 	scope._showInterval["auto"] = setTimeout(function(){
+							// 		gamer.toNext();		
+							// 	}, i * 200 + 4000);
+							// }
 						}
 					}
 				});
@@ -295,7 +301,7 @@
 			init:function(){
 				if(this._hasInitialized == false){
 					var stageEl = $('#stage_3');
-					this._textDom = stageEl.children(":last-child");
+					this._textDom = stageEl.children(".rules-text");
 					this._hasInitialized = true;
 				}
 			},
@@ -343,6 +349,7 @@
 			_bombAttrSelector: "b-n",
 			_bombNumbers: 0,
 			_hasInitialized: false,
+			_forceToJump: false,
 			_getValidIndex: function() {
 				var min = 0,
 					len = this._bombProcessAll.length,
@@ -360,6 +367,9 @@
 			},
 			getProperty: function(name){
 				return this[name];
+			},
+			changeLevelName: function(name){
+				$(".question-level-name, .level-name").text(name);
 			},
 			init:function(){
 				var scope = this;
@@ -398,7 +408,8 @@
 					});
 
 					$(".b-next-button").click(function(){
-
+						gamer.toNext();
+						$(".b-transform").removeClass("next again");
 					});
 
 					$(".b-again-button").click(function(){
@@ -407,7 +418,7 @@
 						gamer.forceToStage(4);
 					});
 					
-					var tb = this._timebar = TimeBar.getInstanceById('sketchSecond');
+					var tb = this._timebar = TimeBar.getInstanceById('bomb_timebar');
 					tb.setSecond(this._limitSeconds);	
 					scope._hasInitialized = true;
 				}
@@ -446,14 +457,20 @@
 					this._timebar.doStart((function(scope){
 						return function(){ 
 							scope.stop();
-							if(scope.getProperty('_bombNumbers') >= 10){
-								$(".b-transform").addClass("next");
-							}else{
-								$(".b-transform").addClass("again");
-							}
+							var toAddClass = "";
+							if(scope.getProperty('_bombNumbers') >= 10) toAddClass = "next";
+							else toAddClass = "again"; 
+							setTimeout(function(){
+								if(toAddClass == "next" && scope._forceToJump){
+									$(".b-next-button").trigger('click');
+								}else{
+									$(".b-transform").addClass(toAddClass);
+								}
+							}, 500);
 						};
 					})(this));
 					gamer.startCacheScore();
+					gamer.updateScore();
 				}
 			},
 			stop:function(itemId){
@@ -483,14 +500,269 @@
 			}
 		};
 
+		window.stage5Process = {
+			_hasInitialized: false,
+			_questions: [
+				{
+					title: '第一題啊 (對)',
+					res: true
+				},
+				{
+					title: '第二題啊 (錯)',
+					res: false
+				},
+				{
+					title: '第三題啊 (對)',
+					res: true
+				},
+				{
+					title: '第四題啊 (錯)',
+					res: false
+				},
+				{
+					title: '第五題啊 (對)',
+					res: true
+				},
+				{
+					title: '第六題啊 (對)',
+					res: true
+				},
+				{
+					title: '第七題啊 (對)',
+					res: true
+				},
+				{
+					title: '第八題啊 (對)',
+					res: true
+				},
+				{
+					title: '第九題啊 (對)',
+					res: true
+				},
+				{
+					title: '第十題啊 (錯)',
+					res: false
+				},
+				{
+					title: '第十一題啊 (錯)',
+					res: false
+				},
+				{
+					title: '第十二題啊 (對)',
+					res: true
+				},
+				{
+					title: '第十三題啊 (錯)',
+					res: false
+				},
+				{
+					title: '第十四題啊 (錯)',
+					res: false
+				},
+				{
+					title: '第十五題啊 (對)',
+					res: true
+				}
+			],
+			// _questionsTemp: null,
+			_timebar: null,
+			_limitSeconds: 20,
+			_getValidQuestion:function(){
+				var min = 0,
+					len = this._questions.length,
+					max = len - 1;
+				if(len){
+					var idx = Math.floor(Math.random() * (max - min + 1) + min);
+					return this._questions[idx];
+				}				
+				return null;
+			},
+			_clearText:function(){
+				for(var i in this._showInterval){
+					clearInterval(this._showInterval[i]);
+				}
+				this._showInterval = null;
+				this._textDom.empty();
+			},
+			init: function(){
+				if(this._hasInitialized == false){
+					var stageEl = $('#stage_5');
+					this._textDom = stageEl.children(".question-text");
+
+					var tb = this._timebar = TimeBar.getInstanceById('question_timebar');
+					tb.setSecond(this._limitSeconds);
+
+					this._hasInitialized = true;
+				}
+			},
+
+			start: function(){
+				var scope = this;
+				if(!scope._showInterval){
+					scope._showInterval = {};
+					// this.__showCacheTempMaps = {};
+					// this.setProperty('_bombNumbers', 0);
+					// $(this._bombSelector).each((function(scope){
+					// 	return function(i,item){
+					// 		var id = item.getAttribute(scope._bombAttrSelector);
+					// 		scope.__showCacheTempMaps[id] = item;
+					// 		scope._bombProcessAll.push(id);
+					// 	};
+					// })(this));
+					// this._processInterval = setInterval((function(scope, s){
+					// 	return function(){	
+					// 		var idx = scope._getValidIndex();
+					// 		if(idx != -1){
+					// 			// console.log("validIndex: " + idx);
+					// 			var itemId = scope._bombProcessAll.splice(idx, 1)[0];
+					// 			// console.log("get Item id: " + itemId);
+					// 			scope._bombShowing.push(itemId);
+					// 			$(scope.__showCacheTempMaps[itemId]).show();
+					// 			// $("[" + scope._bombAttrSelector + "=" + itemId + "]").show();
+					// 			scope._showInterval[itemId] = setTimeout((function(id, outerScope){
+					// 				return function(){ 
+					// 					if(id) outerScope.stop(id);
+					// 				}
+					// 			})(itemId, scope), s * 1000);
+					// 		}
+					// 	};
+					// })(this, this._showSeconds), this._showSeconds * 1000 / 5);	
+					// var qs = scope._questions;
+					// for(var i = 0, len = text.length; i < len; i++){
+					// 	scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+					// 		return function(){
+					// 			var textNode = document.createTextNode(str);
+					// 			dom.append(textNode);
+					// 		};
+					// 	})(text[i], scope._textDom), (i+1) * 200);
+					// }
+
+					function showQuestionFn(){
+						var qs = scope._currentQuestion = scope._getValidQuestion();
+						var text = qs.title;
+						scope._showInterval = {};
+						for(var i = 0, len = text.length; i < len; i++){
+							scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+								return function(){
+									var textNode = document.createTextNode(str);
+									dom.append(textNode);
+								};
+							})(text[i], scope._textDom), (i+1) * 100);
+						}
+					}
+
+					$(".question-button").click(function(){
+						scope._clearText();
+						if(scope._currentQuestion.res.toString() == this.getAttribute('a-n')){
+							gamer.addScore('question');
+						}
+						showQuestionFn();
+					});
+					
+
+					scope._timebar.resetBar();
+					scope._timebar.doStart((function(){
+						return function(){ 
+							// scope.stop();
+							gamer.toNext();
+							// var toAddClass = "";
+							// if(scope.getProperty('_bombNumbers') >= 10) toAddClass = "next";
+							// else toAddClass = "again"; 
+							// setTimeout(function(){ $(".b-transform").addClass(toAddClass); }, 500);
+						};
+					})());
+					gamer.updateScore();
+					showQuestionFn();
+				}
+			},
+			stop: function(){
+				this._clearText();
+				$(".question-button").off("click");
+			}
+		};
+
+		window.stage6Process = {
+			_comments: [
+				{
+					range: '60~79',
+					comment: '你好棒，果然難不倒你'
+				}, {
+					range: '80~99',
+					comment: '火旁龍達人，非你莫屬'
+				}, {
+					range: '100~',
+					comment: '你是天才，神龍賜福於你'
+				}
+			],
+			_textDom: null,
+			_hasInitialized: false,
+			_showInterval: null,
+			_getComments: function(){
+				var score = gamer._totalScore,
+					comments = this._comments,
+					i = 0, len = comments.length;
+				for( ; i < len; i++){
+					var o = comments[i];
+					var ranges = o.range.split('~');
+					var left = parseInt(ranges[0]);
+					var right = parseInt(ranges[1]);
+					left = isNaN(left)? 0 : left;
+					right = isNaN(right)? (score + 1) : right;
+					if(score >= left && score < right){
+						return o.comment;
+					}
+				}
+			},
+			init:function(){
+				if(this._hasInitialized == false){
+					var stageEl = $('#stage_6');
+					this._textDom = stageEl.children(".results-comment");
+					this._scoreDom = stageEl.children(".results-score");
+					this._hasInitialized = true;
+				}
+			},
+			start:function(){
+				// should get scores for this stage
+				var scope = this;
+				var text = scope._getComments();
+				scope._showInterval = {};
+				for(var i = 0, len = text.length; i < len; i++){
+					scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+						return function(){
+							var textNode = document.createTextNode(str);
+							dom.append(textNode);
+						};
+					})(text[i], scope._textDom), (i+1) * 200);
+
+					if(i + 1 == len){
+						scope._showInterval["_score"] = setTimeout((function(str, dom){
+							return function(){
+								var textNode = document.createTextNode(str);
+								dom.append(textNode);
+							};
+						})(gamer._totalScore, scope._scoreDom), (i + 2) * 200);
+					}
+				}
+			},
+			stop:function(){
+				for(var i in this._showInterval){
+					clearInterval(this._showInterval[i]);
+				}
+				this._showInterval = null;
+				this._textDom.empty();
+				this._scoreDom.empty();
+			}
+		};
+
 		window.gamer = {
-			_registerStages: [1, 2, 3, 4],
+			_registerStages: [1, 2, 3, 4, 5, 6],
 			_stageElSelector: ".stage",
 			_stageNamePrefix: "stage_",
 			_stageNumberRex: new RegExp("stage_(.*)"),
 			_stageSelectProperty: "id",
 			_bombNumbers: 0,
 			_totalScore: 0,
+			_bombStageTimes: 1,
 			currentStage: 1,
 			_getProcess: function(stage){
 				return window["stage" + stage + "Process"];
@@ -512,7 +784,7 @@
 					this._getProcess(r[i]).init();
 				}
 				$(".b-counter").text(this._bombNumbers);
-				$(".score-counter").text(this._totalScore);
+				$(".b-score-counter").text(this._totalScore);
 			},
 			forceToStage: function(name){
 				var currentProcess = this._getProcess(this.currentStage);
@@ -532,18 +804,41 @@
 				if(typeof this.currentStage == 'undefined' || this.currentStage == null){
 					// ???
 				}
-				var next = 1;
+				var nextObj;
 				// game transform logic
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').hide();
+				this._getProcess(this.currentStage).stop();
 				switch(this.currentStage){
 					case 1:
 					case 2:
+						nextObj = this._getProcess(++this.currentStage);
+						break;
 					case 3:
-						this._getProcess(this.currentStage).stop();
-						this.currentStage++;
-						this._getProcess(this.currentStage).start();
+						nextObj = this._getProcess(++this.currentStage);
+						nextObj.changeLevelName("第一關");
+						break;
+					case 4:
+						if(this._bombStageTimes == 3){
+							this.currentStage = 6;
+							this._bombStageTimes = 1;
+						}else{
+							this.currentStage++;
+							this._bombStageTimes++;
+						}
+						nextObj = this._getProcess(this.currentStage);
+						break;
+					case 5:
+						this.currentStage = 4;
+						nextObj = this._getProcess(this.currentStage);
+						if(this._bombStageTimes == 2){
+							nextObj.changeLevelName("第二關");
+						}else if(this._bombStageTimes == 3){
+							nextObj.changeLevelName("第三關");
+							nextObj._forceToJump = true;
+						}
 						break;
 				}
+				nextObj.start();
 				// transform animation or not
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + this.currentStage + ']').show();
 			},
@@ -557,9 +852,13 @@
 					// var old = parseInt($(".b-counter").text());
 					// $(".b-counter").text(++old);
 				}
+				if(type == "question"){
+					this._totalScore += 5;
+					this.updateScore();
+				}
 			},
 			updateScore:function(){
-				$(".score-counter").text(this._totalScore);
+				$(".b-score-counter, .question-score-counter").text(this._totalScore);
 			},
 			startCacheScore:function(){
 				this._cacheScore = this._totalScore;
@@ -567,6 +866,12 @@
 			restoreScore: function(){
 				this._totalScore = this._cacheScore;
 				this.updateScore();
+			},
+			replay:function(){
+				this._bombNumbers = 0;
+				this._totalScore = 0;
+				this._bombStageTimes = 1;
+				this.forceToStage(1);
 			}
 		};
 
@@ -640,7 +945,7 @@
   		<div class="next-stage button-intro-enter"></div>
 
   		<!-- for the bugs -->
-  		<!-- <div class="intro-firework" style="left: 120px; top: 20px; display: none;" f-n="1">
+  		<div class="intro-firework" style="left: 120px; top: 20px; display: none;" f-n="1">
   			<img width="100%" src="images/01-intro-firework-stop.png">
   		</div>
   		<div class="intro-firework" style="left: 348px; top: 0px; display: none;" f-n="2">
@@ -657,7 +962,7 @@
   		</div>
   		<div class="intro-firework" style="left: 590px; top: 260px; display: none;" f-n="6">
   			<img width="100%" src="images/01-intro-firework-stop.png">
-  		</div> -->
+  		</div>
 
   	</div>
   	<div id="stage_2" class="stage stage-message">
@@ -668,6 +973,9 @@
   			<img src="images/02-message-oldman.gif" width="100%" />
   		</div>
   		<div class="message-text font-zhuin"></div>
+  		<div class="message-next">
+  			<img src="images/02-message-next.png" width="100%" />
+  		</div>
   	</div>
   	<div id="stage_3" class="stage stage-rules">
   		<div class="rules-oldman">
@@ -677,15 +985,15 @@
   		<div class="rules-text font-zhuin"></div>
   	</div>
   	<div id="stage_4" class="stage stage-bomb">
-  		<div class="font-zhuin info-text level-name">第一關</div>
+  		<div class="font-zhuin info-text level-name"></div>
   		<div class="font-zhuin info-text score-counter-name">積分</div>
   		<div class="font-zhuin info-text b-counter-name">鞭炮<span class="font-zhuin-poin1">數</span></div>
-  		<div class="font-zhuin info-text timebar-name">時間</div>
+  		<div class="font-zhuin info-text b-timebar-name">時間</div>
   		<div class="font-zhuin b-counter">0</div>
-  		<div class="font-zhuin score-counter">00000</div>
-  		<div class="timebar">
+  		<div class="font-zhuin b-score-counter">00000</div>
+  		<div class="b-timebar">
   			<div class="HP_bar"> 
-		      <div id="sketchSecond" class="HP_bar_inner" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+		      <div id="bomb_timebar" class="HP_bar_inner" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
 		      </div>
 		    </div>	
   		</div>
@@ -714,5 +1022,33 @@
   			</div>
   		</div>
   	</div>
+  	<div id="stage_5" class="stage stage-question">
+  		<div class="font-zhuin info-text question-level-name"></div>
+  		<div class="font-zhuin info-text question-score-counter-name">積分</div>
+  		<div class="font-zhuin info-text question-timebar-name">時間</div>
+  		<div class="font-zhuin question-score-counter">00000</div>
+  		<div class="question-timebar">
+  			<div class="HP_bar"> 
+		      <div id="question_timebar" class="HP_bar_inner" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+		      </div>
+		    </div>	
+  		</div>
+  		<div class="question-title font-zhuin">小常識</div>
+  		<div class="question-text font-zhuin"></div>
+  		<div class="question-girl">
+  			<img src="images/05-question-girl.gif" width="100%" />
+  		</div>
+  		<div class="question-button question-yes" a-n="true"></div>
+  		<div class="question-button question-no" a-n="false"></div>
+  	</div>
+
+  	<div id="stage_6" class="stage stage-results">
+  		<div class="results-oldman">
+  			<img src="images/02-message-oldman-2.gif" width="100%" />
+  		</div>
+  		<div class="font-zhuin results-score"></div>
+  		<div class="font-zhuin results-comment"></div>
+  	</div>
+  	<div id="stage_7" class="stage stage-results"></div>
   </body>
 </html>
