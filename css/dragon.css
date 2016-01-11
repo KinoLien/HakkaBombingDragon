@@ -71,6 +71,28 @@ body{
   user-select: none;
 }
 
+input:focus{
+  outline: none;
+}
+
+.loading-wrap{
+  width: 425px;
+  height: 600px;
+  /*margin: 0 auto;*/
+  /*display: none;*/
+  position: absolute;
+  left: 50%;
+  top:0;
+  z-index: 1000;
+}
+.loading-offset{
+  width: 425px;
+  height: 600px;
+  position: relative;
+  left: -50%;
+  top:0;
+}
+
 .b-timebar{
   position: absolute;
   right: 29px;
@@ -576,4 +598,23 @@ div[class^=bomb]{
   text-align: right;
   font-size: 16px;
   color:#de3e45;
+}
+
+.leader-input-wrap{
+  position: absolute;
+  width: 206px;
+  height: 71px;
+  left: 182px;
+  top: 505px;
+  background: url(../images/07-leader-input.png) no-repeat;
+  display: none;
+}
+
+.leader-input-wrap input{
+  width: 170px;
+  height: 39px;
+  margin: 13px 18px 19px;
+  font-size: 23px;
+  border: 0px;
+  background:transparent;
 }
