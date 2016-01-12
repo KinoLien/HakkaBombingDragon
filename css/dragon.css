@@ -378,6 +378,7 @@ div[class^=bomb]{
   height: 100px;
   left: 197px;
   top: 331px;
+  z-index: 100;
 }
 
 .b-next-button{
@@ -427,6 +428,7 @@ div[class^=bomb]{
   top: 320px;
   width: 220px; 
 }
+
 
 .people{
   position: absolute;
@@ -618,3 +620,65 @@ div[class^=bomb]{
   border: 0px;
   background:transparent;
 }
+
+#person_move {
+    z-index: 50;
+    position: absolute;
+    left: 12%;
+    top: 365px;
+    width: 258px;
+    height: 193px;
+    background: url(../images/04-person-neg.gif) no-repeat;
+    background-size: 100% auto;
+    display: none;
+}
+
+#oldman_move {
+    z-index: 51;
+    position: absolute;
+    left: 12%;
+    top: 95px;
+    width: 104px;
+    height: 123px;
+    background: url(../images/04-oldman-neg.gif) no-repeat;
+    background-size: 100% auto;
+    background-position: center bottom;
+    display: none;
+}
+
+
+.pos{
+  background-image: url(../images/04-person-pos.gif) !important;
+}
+
+.pos-old{
+  background-image: url(../images/04-oldman-pos.gif) !important; 
+}
+
+.to-move{
+  /*-webkit-animation: backandforth 5s ease 0s;
+  animation: backandforth 5s ease 0s;*/
+  -webkit-animation: backandforth 5s linear;
+  animation: backandforth 5s linear;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
+  
+}
+
+.to-move-old{
+  /*-webkit-animation: backandforthOld 7s ease 0s;
+  animation: backandforthOld 7s ease 0s;*/
+  -webkit-animation: backandforthOld 7s linear;
+  animation: backandforthOld 7s linear;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
+}
+
+@-webkit-keyframes backandforth { 0%{left:12%;} 50%{left:65%;} 100%{left:12%;}}
+
+@keyframes backandforth {0%{left:10%;} 50%{left:65%;} 100%{left:10%;}}
+
+
+@-webkit-keyframes backandforthOld { 0%{left:18%;} 50%{left:69%;} 100%{left:18%;}}
+
+@keyframes backandforthOld {0%{left:18%;} 50%{left:69%;} 100%{left:18%;}}

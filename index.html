@@ -303,6 +303,13 @@
 					this._fireworkProcessAll.push(itemId);
 					// console.log(this._fireworkProcessAll);
 				}
+			},
+			reset:function(){
+				this._processInterval = null;
+				this._showInterval = null;
+				this._showCacheTempMaps = null;
+				this._fireworkProcessAll = [];
+				this._fireworkShowing = [];
 			}
 		};
 
@@ -353,7 +360,8 @@
 				}
 				this._showInterval = null;
 				this._textDom.empty();
-			}
+			},
+			reset:function(){}
 		};
 
 		window.stage3Process = {
@@ -387,6 +395,9 @@
 				}
 				this._showInterval = null;
 				this._textDom.empty();
+			},
+			reset: function(){
+				this._showInterval = null;
 			}
 		};
 
@@ -401,6 +412,8 @@
 			],
 			_bombSrc: "images/04-bomb9.png",
 			_exploSrc: "images/04-explosion.gif",
+			_personInterval: null,
+			_oldmanInterval: null,
 			_processInterval: null,
 			_showInterval: null,
 			_showSeconds: 3,
@@ -411,6 +424,8 @@
 			_bombSelector: "div[b-n]",
 			_bombAttrSelector: "b-n",
 			_bombNumbers: 0,
+			_hasPersonMove: false,
+			_hasOldmanMove: false,
 			_hasInitialized: false,
 			_forceToJump: false,
 			_movePerson: false,
@@ -423,6 +438,44 @@
 					return Math.floor(Math.random() * (max - min + 1) + min);
 				}				
 				return -1;
+			},
+			_startPersonMove:function(){
+				var moveObj = $('#person_move');
+				moveObj.addClass('to-move');
+				this._personInterval = setInterval(function(){
+					if(moveObj.hasClass('pos')){
+						moveObj.removeClass('pos');
+					}else{
+						moveObj.addClass('pos');
+					}
+				},2500);
+				moveObj.show();
+			},
+			_stopPersonMove:function(){
+				var moveObj = $('#person_move');
+				clearInterval(this._personInterval);
+				this._personInterval = null;
+				moveObj.removeClass('pos to-move');
+				moveObj.hide();
+			},
+			_startOldmanMove:function(){
+				var moveObj = $('#oldman_move');
+				moveObj.addClass('to-move-old');
+				this._oldmanInterval = setInterval(function(){
+					if(moveObj.hasClass('pos-old')){
+						moveObj.removeClass('pos-old');
+					}else{
+						moveObj.addClass('pos-old');
+					}
+				},3500);
+				moveObj.show();
+			},
+			_stopOldmanMove:function(){
+				var moveObj = $('#oldman_move');
+				clearInterval(this._oldmanInterval);
+				this._oldmanInterval = null;
+				moveObj.removeClass('pos-old to-move-old');
+				moveObj.hide();
 			},
 			setProperty: function(name, value){
 				this[name] = value;
@@ -458,18 +511,20 @@
 						gamer.addScore("bomb", 1);
 						bombBody.attr('is-clicked', true);
 						bombBody.attr('src', scope._exploSrc);
-						setTimeout((function(bb){
-							return function(){ 
-								var id = bb.parent().attr("b-n");
-								if(id){
+						// for stop jumping at show explosion
+						var itemId = bombBody.parent().attr("b-n");
+						if(itemId){
+							clearInterval(scope._showInterval[itemId]);
+							setTimeout((function(bb, id){
+								return function(){ 
 									scope.stop(id);
 									bb.attr('src', scope._bombSrc);
 									bb.attr('is-clicked', false);
 									// bb.show();
 									// eb.hide();
-								}
-							};
-						})(bombBody), 400);
+								};
+							})(bombBody, itemId), 400);
+						}
 					});
 
 					$(".b-next-button").click(function(){
@@ -536,6 +591,12 @@
 					})(this));
 					gamer.startCacheScore();
 					gamer.updateScore();
+					if(this._hasPersonMove){
+						this._startPersonMove();
+					}
+					if(this._hasOldmanMove){
+						this._startOldmanMove();
+					}
 				}
 			},
 			stop:function(itemId){
@@ -545,6 +606,12 @@
 					clearInterval(this._processInterval);
 					for(var i in this._showInterval){
 						clearInterval(this._showInterval[i]);
+					}
+					if(this._hasPersonMove){
+						this._stopPersonMove();
+					}
+					if(this._hasOldmanMove){
+						this._stopOldmanMove();
 					}
 					// console.log("stop all");
 					this._processInterval = null;
@@ -562,6 +629,22 @@
 					// console.log("stop and push: " + itemId);
 					this._bombProcessAll.push(itemId);
 				}
+			},
+			reset: function(){
+				this._personInterval = null;
+				this._oldmanInterval = null;
+				this._processInterval = null;
+				this._showInterval = null;
+				this._showSeconds = 3;
+				this._limitSeconds = 20;
+				this._bombProcessAll = [];
+				this._bombShowing = [];
+				this._bombNumbers = 0;
+				this._hasPersonMove = false;
+				this._hasOldmanMove = false;
+				this._forceToJump = false;
+				this._movePerson = false;
+				this._moveOldman = false;
 			}
 		};
 
@@ -632,6 +715,7 @@
 			// _questionsTemp: null,
 			_timebar: null,
 			_limitSeconds: 20,
+			_showInterval: null,
 			_getValidQuestion:function(){
 				var min = 0,
 					len = this._questions.length,
@@ -660,7 +744,6 @@
 					this._hasInitialized = true;
 				}
 			},
-
 			start: function(){
 				var scope = this;
 				if(!scope._showInterval){
@@ -743,6 +826,10 @@
 			stop: function(){
 				this._clearText();
 				$(".question-button").off("click");
+			},
+			reset: function(){
+				this._limitSeconds = 20;
+				this._showInterval = null;
 			}
 		};
 
@@ -820,6 +907,9 @@
 				this._showInterval = null;
 				this._textDom.empty();
 				this._scoreDom.empty();
+			},
+			reset:function(){
+				this._showInterval = null;
 			}
 		};
 
@@ -888,6 +978,9 @@
 			stop:function(){
 				this._leaderWrap.empty();
 				this._isInLeader = false;
+			},
+			reset:function() {
+				this._isInLeader = this;
 			}
 		};
 
@@ -923,6 +1016,14 @@
 				}
 				$(".b-counter").text(this._bombNumbers);
 				$(".b-score-counter").text(this._totalScore);
+			},
+			resetProcess:function(){
+				var r = this._registerStages,
+					i = 0,
+					len = r.length;
+				for(; i < len; i++){
+					this._getProcess(r[i]).reset();
+				}
 			},
 			forceToStage: function(name){
 				// var currentProcess = this._getProcess(this.currentStage);
@@ -964,6 +1065,8 @@
 					case 3:
 						nextObj = this._getProcess(++this.currentStage);
 						nextObj.changeLevelName("第一關");
+						nextObj._hasPersonMove = false;
+						nextObj._hasOldmanMove = false;
 						break;
 					case 4:
 						if(this._bombStageTimes == 3){
@@ -980,8 +1083,12 @@
 						nextObj = this._getProcess(this.currentStage);
 						if(this._bombStageTimes == 2){
 							nextObj.changeLevelName("第二關");
+							nextObj._showSeconds = 2;
+							nextObj._hasPersonMove = true;
 						}else if(this._bombStageTimes == 3){
 							nextObj.changeLevelName("第三關");
+							nextObj._showSeconds = 1;
+							nextObj._hasOldmanMove = true;
 							nextObj._forceToJump = true;
 						}
 						break;
@@ -1101,6 +1208,7 @@
 				this._cacheScore = 0;
 				this._bombStageTimes = 1;
 				this._scoreHasRecord = false;
+				this.resetProcess();
 				this.forceToStage(1);
 			},
 			loading:function(toShow){
@@ -1166,6 +1274,10 @@
   		<img width="100%" src="images/01-intro-firework.gif"/>
   		<img width="100%" src="images/04-bomb9.png"/>
   		<img width="100%" src="images/04-explosion.gif"/>
+  		<img width="100%" src="images/04-person-pos.gif"/>
+  		<img width="100%" src="images/04-person-neg.gif"/>
+  		<img width="100%" src="images/04-oldman-pos.gif"/>
+  		<img width="100%" src="images/04-oldman-neg.gif"/>
   	</div>
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
   	<!-- <div id="stage_prepare" class="stage stage-loading" style="display:block;">
@@ -1207,7 +1319,6 @@
   		<div class="intro-firework" style="left: 590px; top: 260px; display: none;" f-n="6">
   			<img width="100%" src="images/01-intro-firework-stop.png">
   		</div>
-
   	</div>
   	<div id="stage_2" class="stage stage-message">
   		<div class="message-dialog">
@@ -1265,6 +1376,14 @@
   				<!-- <div class="b-again-button-text">再挑戰一次</div> -->
   			</div>
   		</div>
+
+  		<!-- <div class="move-ballman-wrapper">
+		    <div class="move-ballman-innerwrapper">
+		        <div id="move"></div>
+		    </div>
+		</div> -->
+		<div id="person_move"></div>
+		<div id="oldman_move"></div>
   	</div>
   	<div id="stage_5" class="stage stage-question">
   		<div class="font-zhuin info-text question-level-name"></div>
