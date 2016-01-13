@@ -634,6 +634,18 @@ div[class^=bomb]{
   background:transparent;
 }
 
+.fruit{
+  z-index: 49;
+  position: absolute;
+  left: 0;
+  top: 203px;
+  width: 45px;
+}
+
+.fruit > img{
+  cursor: pointer;
+}
+
 #person_move {
     z-index: 50;
     position: absolute;

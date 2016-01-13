@@ -410,6 +410,7 @@
 				323, 380, 358, 375, 386, 389, 386, 359, 409, 329, 414, 288, 383, 282,
 				359, 279, 359, 244, 292, 311, 572, 348, 445, 305
 			],
+			_fruitNumbers: [1,2,3,4,5,6],
 			_bombSrc: "images/04-bomb9.png",
 			_exploSrc: "images/04-explosion.gif",
 			_personInterval: null,
@@ -440,6 +441,15 @@
 				}				
 				return -1;
 			},
+			_getValidFruit: function(){
+				var min = 0,
+					len = this._fruitNumbers.length,
+					max = len - 1;
+				if(len){
+					return this._fruitNumbers[Math.floor(Math.random() * (max - min + 1) + min)];
+				}				
+				return -1;
+			},
 			_startPersonMove:function(){
 				var moveObj = $('#person_move');
 				moveObj.addClass('to-move');
@@ -460,18 +470,37 @@
 				moveObj.hide();
 			},
 			_startOldmanMove:function(){
+				var scope = this;
 				var moveObj = $('#oldman_move');
 				moveObj.addClass('to-move-old');
-				this._oldmanInterval = setInterval(function(){
+				scope._oldmanInterval = setInterval(function(){
 					if(moveObj.hasClass('pos-old')){
 						moveObj.removeClass('pos-old');
 					}else{
 						moveObj.addClass('pos-old');
 					}
 				},3500);
-				this._fruitInterval = setInterval(function(){
-
-				}, 1000);
+				scope._fruitInterval = setInterval(function(){
+					var num = scope._getValidFruit();
+					var left = parseFloat(moveObj.css('left')) + 30;
+					var str = '<div class="fruit" style="left:' + left + 'px;' +
+						'"><img src="images/04-fruit-' + num + 
+						'.png" width="100%" /></div>';
+					$('#stage_4').append(str);
+					var wrap = $('#stage_4').children(".fruit:last-child");
+					var imgEl = wrap.children("img:first-child");
+					imgEl.click(function(){
+						wrap.stop();
+						wrap.remove();
+						gamer.addScore('fruit');
+					});
+					wrap.animate({top:470},{
+						duration:1300,
+						complete:function(){
+							wrap.remove();
+						}
+					});
+				}, 800);
 				moveObj.show();
 			},
 			_stopOldmanMove:function(){
@@ -482,6 +511,7 @@
 				this._fruitInterval = null;
 				moveObj.removeClass('pos-old to-move-old');
 				moveObj.hide();
+				$('#stage_4').children(".fruit").stop().remove();
 			},
 			setProperty: function(name, value){
 				this[name] = value;
@@ -1194,6 +1224,10 @@
 					this._totalScore += 5;
 					this.updateScore();
 				}
+				if(type == "fruit"){
+					this._totalScore += 5;
+					this.updateScore();	
+				}
 			},
 			updateScore:function(){
 				$(".b-score-counter, .question-score-counter").text(this._totalScore);
@@ -1285,6 +1319,12 @@
   		<img width="100%" src="images/04-person-neg.gif"/>
   		<img width="100%" src="images/04-oldman-pos.gif"/>
   		<img width="100%" src="images/04-oldman-neg.gif"/>
+  		<img width="100%" src="images/04-fruit-1.png"/>
+  		<img width="100%" src="images/04-fruit-2.png"/>
+  		<img width="100%" src="images/04-fruit-3.png"/>
+  		<img width="100%" src="images/04-fruit-4.png"/>
+  		<img width="100%" src="images/04-fruit-5.png"/>
+  		<img width="100%" src="images/04-fruit-6.png"/>
   	</div>
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
   	<!-- <div id="stage_prepare" class="stage stage-loading" style="display:block;">
@@ -1398,6 +1438,9 @@
 		</div> -->
 		<div id="person_move"></div>
 		<div id="oldman_move"></div>
+		<!-- <div class="fruit">
+			<img src="images/04-fruit-1.png" width="100%" />
+		</div> -->
   	</div>
   	<div id="stage_5" class="stage stage-question">
   		<div class="font-zhuin info-text question-level-name"></div>
