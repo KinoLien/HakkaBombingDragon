@@ -414,6 +414,7 @@
 			_exploSrc: "images/04-explosion.gif",
 			_personInterval: null,
 			_oldmanInterval: null,
+			_fruitInterval: null,
 			_processInterval: null,
 			_showInterval: null,
 			_showSeconds: 3,
@@ -468,12 +469,17 @@
 						moveObj.addClass('pos-old');
 					}
 				},3500);
+				this._fruitInterval = setInterval(function(){
+
+				}, 1000);
 				moveObj.show();
 			},
 			_stopOldmanMove:function(){
 				var moveObj = $('#oldman_move');
 				clearInterval(this._oldmanInterval);
+				clearInterval(this._fruitInterval);
 				this._oldmanInterval = null;
+				this._fruitInterval = null;
 				moveObj.removeClass('pos-old to-move-old');
 				moveObj.hide();
 			},
@@ -635,6 +641,7 @@
 				this._oldmanInterval = null;
 				this._processInterval = null;
 				this._showInterval = null;
+				this._fruitInterval = null;
 				this._showSeconds = 3;
 				this._limitSeconds = 20;
 				this._bombProcessAll = [];
@@ -1289,14 +1296,21 @@
   		</div>
 	</div>
   	<div id="stage_1" class="stage stage-intro">
+  		
   		<div class="intro-back">
   			<img src="images/01-intro-back.png" width="100%" />
   		</div>
+  		<!-- <div class="intro-back-tmp">
+  			<img src="images/01-intro-back-tmp.png" width="100%" />
+  		</div> -->
   		<div class="intro-dragon">
   			<img src="images/01-intro-dragon.gif" width="100%" />
   		</div>
   		<div class="intro-girl">
   			<img src="images/01-intro-girl.gif" width="100%" />
+  		</div>
+  		<div class="intro-word">
+  			<img src="images/01-intro-word.png" width="100%" />
   		</div>
   		<div class="next-stage button-intro-enter"></div>
 

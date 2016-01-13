@@ -214,13 +214,19 @@ input:focus{
   top: 0;
   width: 100%;
 }
+.intro-back-tmp{
+  position: absolute;
+  opacity: 0.5;
+  left: 0;
+  top: 0;
+  width: 100%; 
+}
 
 .intro-dragon{
   position: absolute;
-  left: 93px;
-  top: 35px;
+  left: 123px;
+  top: 23px;
   width: 440px;
-  /*height: 460px;  */
 }
 
 .intro-girl{
@@ -229,6 +235,13 @@ input:focus{
   top: 330px;
   width: 130px;
   /*height: 140px; */
+}
+
+.intro-word{
+  position: absolute;
+  left: 509px;
+  top: 67px;
+  width: 128px;
 }
 
 .intro-firework{
