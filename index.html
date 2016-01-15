@@ -1101,7 +1101,9 @@
 				// currentProcess.init();
 				$('[' + this._stageSelectProperty + '^=' + this._stageNamePrefix + ']').hide();
 				$('[' + this._stageSelectProperty + '^=' + 
-					this._stageNamePrefix + name + ']')[name == 1?'fadeIn':'show']();
+					this._stageNamePrefix + name + ']')[name == 1?'fadeIn':'show'](function(){
+						$('.loading-wrap').hide();
+					});
 
 				this._getProcess(this.currentStage).start();
 				// currentProcess.start();
