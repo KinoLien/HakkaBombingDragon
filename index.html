@@ -317,7 +317,7 @@
 			_hasInitialized:false,
 			_textDom: null,
 			_showInterval: null,
-			_textStr: "這裡放一些文字，點點點。",
+			_textStr: "小朋友，看完了「x龍迎新春」這本有趣的立體書，相信對客家的舞龍文化有點認識囉！這樣子吧，要不要來挑戰一下闖關遊戲呢？！通過以後，可能會有神龍降福喔！",
 			init:function(){
 				if(this._hasInitialized == false){
 					var stageEl = $('#stage_2');
@@ -368,7 +368,7 @@
 			_hasInitialized:false,
 			_textDom: null,
 			_showInterval: null,
-			_textStr: "這裡也是放一些文字，點點點。",
+			_textStr: "1. x龍儀式共分為三個關卡，鞭炮出現的速度會越來越快。\n2. 每個關卡請在20秒內完成，點中1個鞭炮可得2分，點中10個鞭炮即可過關。\n3. 過關後會跑出小常識加分題，請在20秒內回答問題，答對1題可得5分。",
 			init:function(){
 				if(this._hasInitialized == false){
 					var stageEl = $('#stage_3');
@@ -383,8 +383,12 @@
 				for(var i = 0, len = text.length; i < len; i++){
 					scope._showInterval[i.toString()] = setTimeout((function(str, dom){
 						return function(){
-							var textNode = document.createTextNode(str);
-							dom.append(textNode);
+							if(str == '\n'){
+								dom.append('<div style="height:10px;"></div>');
+							}else{
+								var textNode = document.createTextNode(str);
+								dom.append(textNode);
+							}
 						};
 					})(text[i], scope._textDom), (i+1) * 200);
 				}
@@ -707,64 +711,84 @@
 			_hasInitialized: false,
 			_questions: [
 				{
-					title: '第一題啊 (對)',
+					title: 'x龍是客庄十二大節慶活動，也是臺灣客家族群元宵節的慶典活動。',
 					res: true
 				},
 				{
-					title: '第二題啊 (錯)',
+					title: 'x龍是客庄十二大節慶活動，也是臺灣原住民族元宵節的慶典活動。',
 					res: false
 				},
 				{
-					title: '第三題啊 (對)',
-					res: true
-				},
-				{
-					title: '第四題啊 (錯)',
+					title: 'x龍是客庄十二大節慶活動，也是臺灣客家族群中秋節的慶典活動。',
 					res: false
 				},
 				{
-					title: '第五題啊 (對)',
-					res: true
-				},
-				{
-					title: '第六題啊 (對)',
-					res: true
-				},
-				{
-					title: '第七題啊 (對)',
-					res: true
-				},
-				{
-					title: '第八題啊 (對)',
-					res: true
-				},
-				{
-					title: '第九題啊 (對)',
-					res: true
-				},
-				{
-					title: '第十題啊 (錯)',
+					title: 'x龍儀式是高雄地區最熱鬧有趣的元宵慶典活動。',
 					res: false
 				},
 				{
-					title: '第十一題啊 (錯)',
-					res: false
-				},
-				{
-					title: '第十二題啊 (對)',
+					title: 'x龍是苗栗地區最熱鬧有趣的元宵慶典活動。',
 					res: true
 				},
 				{
-					title: '第十三題啊 (錯)',
-					res: false
-				},
-				{
-					title: '第十四題啊 (錯)',
-					res: false
-				},
-				{
-					title: '第十五題啊 (對)',
+					title: '「x」是客家話「炸」的意思，「x龍」就是用鞭炮炸龍。',
 					res: true
+				},
+				{
+					title: '「跈龍」就是用鞭炮炸龍的意思。',
+					res: false
+				},
+				{
+					title: '好客龍的尾巴捲捲的，跟別的龍有些不一樣，尾巴向左捲的是母龍，向右捲的是公龍。',
+					res: false
+				},
+				{
+					title: '好客龍的尾巴捲捲的，跟別的龍有些不一樣，尾巴向右捲的是母龍，向左捲的是公龍。',
+					res: true
+				},
+				{
+					title: '糊龍通常在過年前完成，使用苗栗盛產的桂竹，製作完龍頭、龍尾及龍圈，糊上龍衣就完成了。',
+					res: true
+				},
+				{
+					title: '糊龍通常在過年前完成，使用苗栗盛產的藺草，製作完龍頭、龍尾及龍圈，糊上龍衣就完成了。',
+					res: false
+				},
+				{
+					title: '糊好的龍在出龍參拜前，要到媽祖廟前開光點睛、插金花、綁紅巾，祈求神明賜予神靈瑞氣。',
+					res: false
+				},
+				{
+					title: '糊好的龍在出龍參拜前，要到伯公廟前開光點睛、插金花、綁紅巾，祈求神明賜予神靈瑞氣。',
+					res: true
+				},
+				{
+					title: '依照傳統習俗，龍隊會在正月十五開始遶境，連續三天向家家戶戶拜年，為大家帶來祥瑞之氣。',
+					res: true
+				},
+				{
+					title: '「跈龍」就是跟著龍隊走。',
+					res: true
+				},
+				{
+					title: '「跈龍」是在伯公廟前感謝神龍庇佑家園，並送祂返回天上的儀式。',
+					res: false
+				},
+				{
+					title: '在客家習俗中，跈龍除了可以吸收帶來平安吉祥的龍氣，也有跟著神龍前往光明大道的涵意。',
+					res: true
+				},
+				{
+					title: 'x龍就是用鞭炮炸龍，是活動最熱鬧的時候，除了祈福消災，也希望新的一年運勢能夠越炸越旺！',
+					res: true
+				},
+				{
+					title: '結束為期五天的迎龍之後，龍隊會回到點睛的伯公廟前舉行化龍儀式。',
+					res: false
+				},
+				{
+					title: '結束為期三天的迎龍之後，龍隊會回到點睛的三山國王廟前舉行化龍儀式。',
+					res: false
 				}
 			],
 			// _questionsTemp: null,
