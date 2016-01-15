@@ -1306,46 +1306,43 @@
 
 		
 
-		window.isFirstTime = (function(){
-			function getCookie(name) {
-				var value = "; " + document.cookie;
-				var parts = value.split("; " + name + "=");
-				if (parts.length == 2) return parts.pop().split(";").shift();
-				return null;
-			}
-			function createCookie(name,value,days) {
-			    if (days) {
-			        var date = new Date();
-			        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-			        var expires = "; expires=" + date.toGMTString();
-			    }
-			    else var expires = "";
-			    document.cookie = name + "=" + value + expires + "; path=/";
-			}
-			var c = getCookie("_hakka");
-			var isft = (c && c == "yes");
-			createCookie("_hakka", "yes", 365);
-			return !isft;
-		})();
-
-		$(window).load(function(){
-			gamer.loading();
-			$(".next-stage").click(function(){
-				gamer.toNext();
-			});
-		});
+		// window.isFirstTime = (function(){
+		// 	function getCookie(name) {
+		// 		var value = "; " + document.cookie;
+		// 		var parts = value.split("; " + name + "=");
+		// 		if (parts.length == 2) return parts.pop().split(";").shift();
+		// 		return null;
+		// 	}
+		// 	function createCookie(name,value,days) {
+		// 	    if (days) {
+		// 	        var date = new Date();
+		// 	        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		// 	        var expires = "; expires=" + date.toGMTString();
+		// 	    }
+		// 	    else var expires = "";
+		// 	    document.cookie = name + "=" + value + expires + "; path=/";
+		// 	}
+		// 	var c = getCookie("_hakka");
+		// 	var isft = (c && c == "yes");
+		// 	createCookie("_hakka", "yes", 365);
+		// 	return !isft;
+		// })();
 
 		$(document.body).ready(function(){
 			// ***** fix a bug about the html rendering between load and ready:
 			// browser may be can not doing something about rendering on load or image load?
 			gamer.initProcess();
 
+			$(".next-stage").click(function(){
+				gamer.toNext();
+			});
+
 			$(".prepare").empty();
 			// $(".prepare").hide();
 			setTimeout(function(){
 				gamer.forceToStage(1);
 				gamer.loading(false);
-			},600 + (isFirstTime? 2200 : 0));
+			}, 2400);
 		});
   	</script>
   </head>
@@ -1561,5 +1558,8 @@
 		<source src="sounds/sound-pass.ogg" type="audio/ogg"/>
 		<source src="sounds/sound-pass.wav" type="audio/wav"/>
 	</audio>
+	<script type="text/javascript">
+		gamer.loading();
+	</script>
   </body>
 </html>
