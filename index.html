@@ -638,6 +638,7 @@
 								scope._relateAudio = document.getElementById('notpassAudio');
 							} 
 							scope._relateAudio.play();
+							document.getElementById('playAudio').pause();
 							setTimeout(function(){
 								if(toAddClass == "next" && scope._forceToJump){
 									$(".b-next-button").trigger('click');
@@ -1176,6 +1177,7 @@
 						}else{
 							this.currentStage++;
 							this._bombStageTimes++;
+							document.getElementById('playAudio').play();
 						}
 						nextObj = this._getProcess(this.currentStage);
 						break;
