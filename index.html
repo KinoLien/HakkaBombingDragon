@@ -486,8 +486,9 @@
 					var str = '<div class="fruit" style="left:' + left + 'px;' +
 						'"><img src="images/04-fruit-' + num + 
 						'.png" width="100%" /></div>';
-					$('#stage_4').append(str);
-					var wrap = $('#stage_4').children(".fruit:last-child");
+					var stage4El = $('#stage_4');
+					stage4El.append(str);
+					var wrap = stage4El.children(".fruit:last-child");
 					var imgEl = wrap.children("img:first-child");
 					imgEl.click(function(){
 						wrap.stop();
@@ -495,7 +496,8 @@
 						gamer.addScore('fruit');
 					});
 					wrap.animate({top:470},{
-						duration:1300,
+						duration:2000,
+						easing: "linear",
 						complete:function(){
 							wrap.remove();
 						}
@@ -547,6 +549,12 @@
 						gamer.addScore("bomb", 1);
 						bombBody.attr('is-clicked', true);
 						bombBody.attr('src', scope._exploSrc);
+
+						var audioStr = '<audio autoplay><source src="sounds/sound-bomb.mp3" type="audio/mpeg"/><source src="sounds/sound-bomb.ogg" type="audio/ogg"/><source src="sounds/sound-bomb.wav" type="audio/wav"/></audio>';
+						stage4El.append(audioStr);
+						var audioEl = stage4El.children('audio:last-child');
+						audioEl.on('ended', function(){ $(this).remove(); });
+
 						// for stop jumping at show explosion
 						var itemId = bombBody.parent().attr("b-n");
 						if(itemId){
@@ -563,14 +571,18 @@
 						}
 					});
 
+					$('.b-next-button, .b-again-button').click(function(){
+						$(".b-transform").removeClass("next again");
+						scope._relateAudio.pause();
+						scope._relateAudio.load();
+					});
+
 					$(".b-next-button").click(function(){
 						gamer.toNext();
-						$(".b-transform").removeClass("next again");
 					});
 
 					$(".b-again-button").click(function(){
 						gamer.restoreScore();
-						$(".b-transform").removeClass("next again");
 						gamer.forceToStage(4);
 					});
 					
@@ -613,9 +625,15 @@
 					this._timebar.doStart((function(scope){
 						return function(){ 
 							scope.stop();
-							var toAddClass = "";
-							if(scope.getProperty('_bombNumbers') >= 10) toAddClass = "next";
-							else toAddClass = "again"; 
+							var toAddClass = "", relateAudio;
+							if(scope.getProperty('_bombNumbers') >= 10){
+								toAddClass = "next";
+								scope._relateAudio = document.getElementById('passAudio');
+							}else{
+								toAddClass = "again";
+								scope._relateAudio = document.getElementById('notpassAudio');
+							} 
+							scope._relateAudio.play();
 							setTimeout(function(){
 								if(toAddClass == "next" && scope._forceToJump){
 									$(".b-next-button").trigger('click');
@@ -783,6 +801,7 @@
 			},
 			start: function(){
 				var scope = this;
+				var stageEl = $('#stage_5');
 				if(!scope._showInterval){
 					scope._showInterval = {};
 					// this.__showCacheTempMaps = {};
@@ -837,10 +856,19 @@
 					}
 
 					$(".question-button").click(function(){
+						var htmlStr;
 						scope._clearText();
 						if(scope._currentQuestion.res.toString() == this.getAttribute('a-n')){
+							// right
 							gamer.addScore('question');
+							htmlStr = '<audio autoplay><source src="sounds/sound-correct.mp3" type="audio/mpeg"/><source src="sounds/sound-correct.ogg" type="audio/ogg"/><source src="sounds/sound-correct.wav" type="audio/wav"/></audio>';
+						}else{
+							// wrong
+							htmlStr = '<audio autoplay><source src="sounds/sound-wrong.mp3" type="audio/mpeg"/><source src="sounds/sound-wrong.ogg" type="audio/ogg"/><source src="sounds/sound-wrong.wav" type="audio/wav"/></audio>';
 						}
+						stageEl.append(htmlStr);
+						var audioEl = stageEl.children('audio:last-child');
+						audioEl.on('ended', function(){ $(this).remove(); });
 						showQuestionFn();
 					});
 					
@@ -1035,6 +1063,9 @@
 			_getProcess: function(stage){
 				return window["stage" + stage + "Process"];
 			},
+			_getProcessEl: function(stage){
+				return $('#stage_' + stage);
+			},
 			// [ 'stage_1', '1', index: 0, input: 'stage_1' ]
 			_findStage:function(el){
 				var parentEl = $(el).parents(this._stageElSelector);
@@ -1211,6 +1242,7 @@
 				}
 			},
 			addScore:function(type){
+				var scope = this;
 				if(type == 'bomb'){
 					var co = this._getProcess(this.currentStage);
 					var num = co.getProperty("_bombNumbers");
@@ -1228,6 +1260,15 @@
 					this._totalScore += 5;
 					this.updateScore();	
 				}
+				if(type == "fruit" || type == "bomb"){
+					setTimeout((function(el){
+						return function(){
+							el.append('<audio class="score-sound" autoplay><source src="sounds/sound-addscore.mp3" type="audio/mpeg"/><source src="sounds/sound-addscore.ogg" type="audio/ogg"/><source src="sounds/sound-addscore.wav" type="audio/wav"/></audio>');
+							el.children('audio.score-sound:last-child').on('ended', function(){ $(this).remove(); });
+						};
+					})(this._getProcessEl(this.currentStage)), 200);
+				}
+				
 			},
 			updateScore:function(){
 				$(".b-score-counter, .question-score-counter").text(this._totalScore);
@@ -1330,6 +1371,13 @@
   	<!-- <div id="stage_prepare" class="stage stage-loading" style="display:block;">
   		Loading...
   	</div> -->
+
+  	<!-- <audio autoplay>
+		<source src="sounds/sound-addscore.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-addscore.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-addscore.wav" type="audio/wav"/>
+	</audio> -->
+
   	<div class="loading-wrap">
   		<div class="loading-offset">
   			<img src="images/00-loading.gif" height="100%" />
@@ -1481,5 +1529,35 @@
   			<input id="leader-input" type="text" placeholder="輸入姓名" />
   		</div>
   	</div>
+  	<audio preload="auto"> 
+		<source src="sounds/sound-addscore.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-addscore.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-addscore.wav" type="audio/wav"/>
+	</audio>
+	<audio preload="auto"> 
+		<source src="sounds/sound-bomb.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-bomb.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-bomb.wav" type="audio/wav"/>
+	</audio>
+	<audio preload="auto"> 
+		<source src="sounds/sound-correct.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-correct.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-correct.wav" type="audio/wav"/>
+	</audio>
+	<audio preload="auto"> 
+		<source src="sounds/sound-wrong.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-wrong.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-wrong.wav" type="audio/wav"/>
+	</audio>
+	<audio id="notpassAudio" preload="auto"> 
+		<source src="sounds/sound-notpass.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-notpass.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-notpass.wav" type="audio/wav"/>
+	</audio>
+	<audio id="passAudio" preload="auto"> 
+		<source src="sounds/sound-pass.mp3" type="audio/mpeg"/>
+		<source src="sounds/sound-pass.ogg" type="audio/ogg"/>
+		<source src="sounds/sound-pass.wav" type="audio/wav"/>
+	</audio>
   </body>
 </html>
