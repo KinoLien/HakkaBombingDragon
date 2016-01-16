@@ -201,7 +201,7 @@ input:focus{
 }
 
 .stage-rules{
-  background-image: url(../images/03-rules-background.jpg);
+  background-image: url(../images/03-rules-background.png);
 }
 
 .stage-bomb{
@@ -287,6 +287,10 @@ input:focus{
   bottom: 11px;
   width: 50px;
   cursor: pointer;
+  -webkit-animation: zoombacksmall 1.5s ease 0s;
+  animation: zoombacksmall 1.5s ease 0s;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
 }
 
 .message-text{
@@ -319,15 +323,27 @@ input:focus{
 .button-rules-enter{
   left: 259px;
   top: 515px;
-  width: 277px;
-  height: 69px;
+  width: 286px;
+  height: 79px;
+  background: url(../images/03-rules-button.png);
+  /*background-size: 100% auto;*/
+  /*background-position: center center;*/
+  -webkit-animation: zoomback 1.5s ease 0s;
+  animation: zoomback 1.5s ease 0s;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
 }
 
 .button-intro-enter{  
-  left:272px;
-  top:500px;
-  width:277px;
-  height:67px;
+  left: 272px;
+  top: 498px;
+  width: 283px;
+  height: 78px;
+  background: url(../images/01-intro-button.png);
+  -webkit-animation: zoomback 1.5s ease 0s;
+  animation: zoomback 1.5s ease 0s;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
 }
 
 .background-temp{
@@ -405,6 +421,10 @@ div[class^=bomb]{
   left: 197px;
   top: 331px;
   z-index: 100;
+  -webkit-animation: zoomback 1.5s ease 0s;
+  animation: zoomback 1.5s ease 0s;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
 }
 
 .b-next-button{
@@ -505,17 +525,23 @@ div[class^=bomb]{
   cursor: pointer;
   position: absolute;
   width: 130px;
-  height: 72px;
+  height: 78px;
+  -webkit-animation: zoomback 1.5s ease 0s;
+  animation: zoomback 1.5s ease 0s;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
 }
 
 .question-yes{
-  left: 222px;
-  top: 514px;
+  left: 212px;
+  top: 504px;
+  background: url(../images/05-question-yes.png);
 }
 
 .question-no{
-  left: 452px;
-  top: 514px;
+  left: 442px;
+  top: 504px;
+  background: url(../images/05-question-no.png);
 }
 
 .question-title{
@@ -572,7 +598,11 @@ div[class^=bomb]{
   height: 62px;
   left: 453px;
   top: 511px;
-  /*background:black;*/
+  background:url(../images/07-leader-button.png);
+  -webkit-animation: zoomback 1.5s ease 0s;
+  animation: zoomback 1.5s ease 0s;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
 }
 
 .leader-wrap{
@@ -720,3 +750,12 @@ div[class^=bomb]{
 @-webkit-keyframes backandforthOld { 0%{left:18%;} 50%{left:69%;} 100%{left:18%;}}
 
 @keyframes backandforthOld {0%{left:18%;} 50%{left:69%;} 100%{left:18%;}}
+
+@-webkit-keyframes zoomback { 0%{transform: scale(1.00);} 50%{transform: scale(1.03);} 100%{transform: scale(1.00);}}
+
+@keyframes zoomback {0%{transform: scale(1.00);} 50%{transform: scale(1.03);} 100%{transform: scale(1.00);}}
+
+@-webkit-keyframes zoombacksmall { 0%{transform: scale(1.00);} 50%{transform: scale(1.07);} 100%{transform: scale(1.00);}}
+
+@keyframes zoombacksmall {0%{transform: scale(1.00);} 50%{transform: scale(1.07);} 100%{transform: scale(1.00);}}
+
