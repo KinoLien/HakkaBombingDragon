@@ -339,8 +339,11 @@
 						for(var i = 0, len = text.length; i < len; i++){
 							scope._showInterval[i.toString()] = setTimeout((function(str, dom){
 								return function(){
-									var textNode = document.createTextNode(str);
-        							dom.append(textNode);
+									if(str == 'x'){
+										dom.append('<span class="b-word">　&nbsp;</span>');
+									}else{
+										dom.append(document.createTextNode(str));
+									}
 								};
 							})(text[i], scope._textDom), (i+1) * 200);
 
@@ -385,9 +388,10 @@
 						return function(){
 							if(str == '\n'){
 								dom.append('<div style="height:10px;"></div>');
+							}else if(str == 'x'){
+								dom.append('<span class="b-word">　&nbsp;</span>');
 							}else{
-								var textNode = document.createTextNode(str);
-								dom.append(textNode);
+								dom.append(document.createTextNode(str));
 							}
 						};
 					})(text[i], scope._textDom), (i+1) * 200);
@@ -873,8 +877,11 @@
 						for(var i = 0, len = text.length; i < len; i++){
 							scope._showInterval[i.toString()] = setTimeout((function(str, dom){
 								return function(){
-									var textNode = document.createTextNode(str);
-									dom.append(textNode);
+									if(str == 'x'){
+										dom.append('<span class="b-word">　&nbsp;</span>');
+									}else{
+										dom.append(document.createTextNode(str));
+									}
 								};
 							})(text[i], scope._textDom), (i+1) * 100);
 						}
@@ -930,7 +937,7 @@
 					comment: '你好棒，果然難不倒你'
 				}, {
 					range: '80~99',
-					comment: '火旁龍達人，非你莫屬'
+					comment: 'x龍達人，非你莫屬'
 				}, {
 					range: '100~',
 					comment: '你是天才，神龍賜福於你'
@@ -975,8 +982,11 @@
 				for(var i = 0, len = text.length; i < len; i++){
 					scope._showInterval[i.toString()] = setTimeout((function(str, dom){
 						return function(){
-							var textNode = document.createTextNode(str);
-							dom.append(textNode);
+							if(str == 'x'){
+								dom.append('<span class="b-word">　&nbsp;</span>');
+							}else{
+								dom.append(document.createTextNode(str));
+							}
 						};
 					})(text[i], scope._textDom), (i+1) * 200);
 
@@ -1153,7 +1163,7 @@
 					case 1:
 						// for debug
 						// this.currentStage = 6;
-						// this._totalScore = 74;
+						// this._totalScore = 88;
 						// nextObj = this._getProcess(this.currentStage);
 						// break;
 					case 2:
