@@ -252,7 +252,7 @@
 		  	// 				'<img width="100%" /></div>';
 					// 	stage1El.append(str);
 					// }
-
+					this._el = stage1El;
 					this._hasInitialized = true;
 				}
 			},
@@ -326,7 +326,7 @@
 					$('.message-next').click(function(){
 						gamer.toNext();
 					});
-
+					this._el = stageEl;
 					this._hasInitialized = true;
 				}
 			},
@@ -378,6 +378,7 @@
 				if(this._hasInitialized == false){
 					var stageEl = $('#stage_3');
 					this._textDom = stageEl.children(".rules-text");
+					this._el = stageEl;
 					this._hasInitialized = true;
 				}
 			},
@@ -604,6 +605,7 @@
 					
 					var tb = this._timebar = TimeBar.getInstanceById('bomb_timebar');
 					tb.setSecond(this._limitSeconds);	
+					scope._el = stage4El;
 					scope._hasInitialized = true;
 				}
 			},
@@ -832,7 +834,7 @@
 
 					var tb = this._timebar = TimeBar.getInstanceById('question_timebar');
 					tb.setSecond(this._limitSeconds);
-
+					this._el = stageEl;
 					this._hasInitialized = true;
 				}
 			},
@@ -979,6 +981,7 @@
 					$('.results-next').click(function(){
 						gamer.toNext();
 					});
+					this._el = stageEl;
 					this._hasInitialized = true;
 				}
 			},
@@ -1084,6 +1087,7 @@
 					});
 
 					scope._leaderWrap = $('.leader-wrap');
+					scope._el = $("#stage_7");
 					scope._hasInitialized = true;
 				}
 			},
@@ -1316,6 +1320,9 @@
 			},
 			addScore:function(type){
 				var scope = this;
+				var animateScore = 0;
+				var scoreSelector = "";
+				var stageEl = this._getProcessEl(this.currentStage);
 				if(type == 'bomb'){
 					var co = this._getProcess(this.currentStage);
 					var num = co.getProperty("_bombNumbers");
@@ -1324,14 +1331,20 @@
 					this.updateScore();
 					// var old = parseInt($(".b-counter").text());
 					// $(".b-counter").text(++old);
+					animateScore = 2;
+					scoreSelector = ".b-score-counter";
 				}
 				if(type == "question"){
 					this._totalScore += 5;
 					this.updateScore();
+					animateScore = 5;
+					scoreSelector = ".question-score-counter";
 				}
 				if(type == "fruit"){
 					this._totalScore += 5;
 					this.updateScore();	
+					animateScore = 5;
+					scoreSelector = ".b-score-counter";
 				}
 				if(type == "fruit" || type == "bomb"){
 					setTimeout((function(el){
@@ -1339,9 +1352,21 @@
 							el.append('<audio class="score-sound" autoplay><source src="sounds/sound-addscore.mp3" type="audio/mpeg"/></audio>');
 							el.children('audio.score-sound:last-child').on('ended', function(){ $(this).remove(); });
 						};
-					})(this._getProcessEl(this.currentStage)), 200);
+					})(stageEl), 200);
 				}
-				
+				var scoreEl = $(scoreSelector);
+				var scorePosition = scoreEl.position();
+				var newLeft = scorePosition.left + scoreEl.outerWidth();
+				var newTop = scorePosition.top;
+				stageEl.append('<div class="score-image score-image-' + animateScore + 
+					'" style="left:' + newLeft + 'px;top:' + newTop + 'px;opacity:1;"></div>');
+				stageEl.children('.score-image:last-child').animate({
+					top:0,opacity:0.2
+				},{
+					complete:function(){
+						$(this).remove();
+					}
+				});
 			},
 			updateScore:function(){
 				$(".b-score-counter, .question-score-counter").text(this._totalScore);
@@ -1436,6 +1461,8 @@
   		<img width="100%" src="images/04-fruit-4.png"/>
   		<img width="100%" src="images/04-fruit-5.png"/>
   		<img width="100%" src="images/04-fruit-6.png"/>
+  		<img width="100%" src="images/score-image-5.png"/>
+  		<img width="100%" src="images/score-image-2.png"/>
   	</div>
   	<!-- <div class="font-zhuin">沒什麼事</div> -->
   	<!-- <div id="stage_prepare" class="stage stage-loading" style="display:block;">

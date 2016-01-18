@@ -707,6 +707,22 @@ div[class^=bomb]{
   background-image: url(../images/04-oldman-pos.gif) !important; 
 }
 
+.score-image{
+  background-position: auto top;
+  background-size: 100% auto;
+  width: 43px;
+  height: 28px;
+  position: absolute;
+}
+
+.score-image-5{
+  background-image: url(../images/score-image-5.png);
+}
+
+.score-image-2{
+  background-image: url(../images/score-image-2.png);
+}
+
 .to-move{
   /*-webkit-animation: backandforth 5s ease 0s;
   animation: backandforth 5s ease 0s;*/
