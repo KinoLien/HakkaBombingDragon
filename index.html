@@ -341,18 +341,19 @@
 								return function(){
 									if(str == 'x'){
 										dom.append('<span class="b-word">　&nbsp;</span>');
+									}else if(str == "呢"){
+										dom.append('<span class="font-zhuin-poin1">' + str + '</span>');
 									}else{
 										dom.append(document.createTextNode(str));
 									}
 								};
 							})(text[i], scope._textDom), (i+1) * 200);
 
-							// automatically jump
-							// if(i + 1 == len){
-							// 	scope._showInterval["auto"] = setTimeout(function(){
-							// 		gamer.toNext();		
-							// 	}, i * 200 + 4000);
-							// }
+							if(i + 1 == len){
+								scope._showInterval["ended"] = setTimeout(function(){
+									$(".message-next").addClass('to-zoom-small');
+								}, (i + 1) * 200);
+							}
 						}
 					}
 				});
@@ -363,6 +364,7 @@
 				}
 				this._showInterval = null;
 				this._textDom.empty();
+				$(".message-next").removeClass('to-zoom-small');
 			},
 			reset:function(){}
 		};
@@ -395,6 +397,11 @@
 							}
 						};
 					})(text[i], scope._textDom), (i+1) * 200);
+					if(i + 1 == len){
+						scope._showInterval['ended'] = setTimeout(function(){
+							$(".button-rules-enter").addClass('to-zoom');
+						}, (i+1) * 200 );
+					}
 				}
 			},
 			stop: function(){
@@ -403,6 +410,7 @@
 				}
 				this._showInterval = null;
 				this._textDom.empty();
+				$(".button-rules-enter").removeClass('to-zoom');
 			},
 			reset: function(){
 				this._showInterval = null;
@@ -998,6 +1006,12 @@
 							};
 						})(gamer._totalScore, scope._scoreDom), (i + 2) * 200);
 					}
+
+					if(i + 1 == len){
+						scope._showInterval["ended"] = setTimeout(function(){
+							$(".results-next").addClass('to-zoom-small');
+						}, (i + 2) * 200);
+					}
 				}
 			},
 			stop:function(){
@@ -1007,6 +1021,7 @@
 				this._showInterval = null;
 				this._textDom.empty();
 				this._scoreDom.empty();
+				$(".results-next").removeClass('to-zoom-small');
 			},
 			reset:function(){
 				this._showInterval = null;
@@ -1095,6 +1110,19 @@
 			_bombStageTimes: 1,
 			_scoreHasRecord:false,
 			currentStage: 1,
+			// _getPoinWord: function(text, forceUse){
+			// 	var poin1 = ["呢"];
+			// 	var poin2 = [];
+			// 	if(forceUse){
+			// 		return '<span class="font-zhuin-poin' + forceUse + '">' + text + '</span>';
+			// 	}
+			// 	if(~poin1.indexOf(text)){
+			// 		return '<span class="font-zhuin-poin1">' + text + '</span>';
+			// 	}else if(~poin2.indexOf(text)){
+			// 		return '<span class="font-zhuin-poin2">' + text + '</span>';
+			// 	}
+			// 	return '';
+			// },
 			_getProcess: function(stage){
 				return window["stage" + stage + "Process"];
 			},
@@ -1435,7 +1463,7 @@
   		<div class="intro-word">
   			<img src="images/01-intro-word.png" width="100%" />
   		</div>
-  		<div class="next-stage button-intro-enter"></div>
+  		<div class="next-stage button-intro-enter to-zoom"></div>
 
   		<!-- for the bugs -->
   		<div class="intro-firework" style="left: 120px; top: 20px; display: none;" f-n="1">
@@ -1505,7 +1533,7 @@
   			<!-- <img src="images/04-head.png" width="100%;"> -->
   			<img src="images/04-dragon-head.gif" width="100%;">
   		</div>
-  		<div class="b-transform">
+  		<div class="b-transform to-zoom">
   			<div class="b-next-button font-zhuin">
   				<!-- <div class="b-next-button-text">趕快進行下一關</div> -->
   			</div>
@@ -1600,8 +1628,26 @@
 	<audio id="playAudio" preload="auto" loop> 
 		<source src="sounds/music-playing.mp3" type="audio/mpeg"/>
 	</audio>
+	<div id="zhuinTest" class="font-zhuin" style="font-size:24px;"></div>
 	<script type="text/javascript">
 		gamer.loading();
+		function showTest(){
+			var qs = stage5Process._questions;
+			var el = $('#zhuinTest');
+			for(var i = 0, len = qs.length; i < len; i++){
+				el.append((i+1).toString()  + '.' + qs[i].title + '<br/>');
+				// scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+				// 	return function(){
+				// 		if(str == 'x'){
+				// 			dom.append('<span class="b-word">　&nbsp;</span>');
+				// 		}else{
+				// 			dom.append(document.createTextNode(str));
+				// 		}
+				// 	};
+				// })(text[i], scope._textDom), (i+1) * 100);
+			}
+		}
+		showTest();
 	</script>
   </body>
 </html>

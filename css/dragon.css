@@ -252,9 +252,9 @@ input:focus{
 
 .intro-word{
   position: absolute;
-  left: 509px;
-  top: 67px;
-  width: 128px;
+  left: 483px;
+  top: 36px;
+  width: 177px
 }
 
 .intro-firework{
@@ -287,10 +287,6 @@ input:focus{
   bottom: 11px;
   width: 50px;
   cursor: pointer;
-  -webkit-animation: zoombacksmall 1.5s ease 0s;
-  animation: zoombacksmall 1.5s ease 0s;
-  -webkit-animation-iteration-count:infinite;
-  animation-iteration-count:infinite;
 }
 
 .message-text{
@@ -328,10 +324,6 @@ input:focus{
   background: url(../images/03-rules-button.png);
   /*background-size: 100% auto;*/
   /*background-position: center center;*/
-  -webkit-animation: zoomback 1.5s ease 0s;
-  animation: zoomback 1.5s ease 0s;
-  -webkit-animation-iteration-count:infinite;
-  animation-iteration-count:infinite;
 }
 
 .button-intro-enter{  
@@ -340,10 +332,6 @@ input:focus{
   width: 283px;
   height: 78px;
   background: url(../images/01-intro-button.png);
-  -webkit-animation: zoomback 1.5s ease 0s;
-  animation: zoomback 1.5s ease 0s;
-  -webkit-animation-iteration-count:infinite;
-  animation-iteration-count:infinite;
 }
 
 .background-temp{
@@ -421,10 +409,6 @@ div[class^=bomb]{
   left: 197px;
   top: 331px;
   z-index: 100;
-  -webkit-animation: zoomback 1.5s ease 0s;
-  animation: zoomback 1.5s ease 0s;
-  -webkit-animation-iteration-count:infinite;
-  animation-iteration-count:infinite;
 }
 
 .b-next-button{
@@ -526,10 +510,10 @@ div[class^=bomb]{
   position: absolute;
   width: 130px;
   height: 78px;
-  -webkit-animation: zoomback 1.5s ease 0s;
+  /*-webkit-animation: zoomback 1.5s ease 0s;
   animation: zoomback 1.5s ease 0s;
   -webkit-animation-iteration-count:infinite;
-  animation-iteration-count:infinite;
+  animation-iteration-count:infinite;*/
 }
 
 .question-yes{
@@ -599,10 +583,10 @@ div[class^=bomb]{
   left: 453px;
   top: 511px;
   background:url(../images/07-leader-button.png);
-  -webkit-animation: zoomback 1.5s ease 0s;
+  /*-webkit-animation: zoomback 1.5s ease 0s;
   animation: zoomback 1.5s ease 0s;
   -webkit-animation-iteration-count:infinite;
-  animation-iteration-count:infinite;
+  animation-iteration-count:infinite;*/
 }
 
 .leader-wrap{
@@ -738,6 +722,20 @@ div[class^=bomb]{
   animation: backandforthOld 7s ease 0s;*/
   -webkit-animation: backandforthOld 7s linear;
   animation: backandforthOld 7s linear;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
+}
+
+.to-zoom{
+  -webkit-animation: zoomback 1s linear;
+  animation: zoomback 1s linear;
+  -webkit-animation-iteration-count:infinite;
+  animation-iteration-count:infinite;
+}
+
+.to-zoom-small{
+  -webkit-animation: zoombacksmall 1s linear;
+  animation: zoombacksmall 1s linear;
   -webkit-animation-iteration-count:infinite;
   animation-iteration-count:infinite;
 }
