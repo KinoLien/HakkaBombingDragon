@@ -93,18 +93,26 @@ input:focus{
   top:0;
 }
 
-
 .b-word{
+  background: url(../images/word.png) no-repeat;
+}
+
+.b-word-white{
+  background: url(../images/word-white.png) no-repeat;
+}
+
+.b-word, .b-word-white{
   /*position: relative;
   left: 20px;
   top: 20px;
   line-height: 20px;
   width: 26px;
   height: 24px;*/
-  background: url(../images/word.png) no-repeat;
   background-size: 100% auto;
   background-position: center bottom;
 }
+
+
 
 .b-timebar{
   position: absolute;

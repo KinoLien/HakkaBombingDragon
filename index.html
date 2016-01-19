@@ -2,7 +2,8 @@
 <html>
   <head>
   	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
-  	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  	<meta http-equiv="X-UA-Compatible" content="IE=10">
+  	<!-- <meta http-equiv="X-UA-Compatible" content="IE=Edge"> -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
   	<link rel="stylesheet" type="text/css" href="css/dragon.css" />
@@ -392,7 +393,7 @@
 							if(str == '\n'){
 								dom.append('<div style="height:10px;"></div>');
 							}else if(str == 'x'){
-								dom.append('<span class="b-word">　&nbsp;</span>');
+								dom.append('<span class="b-word-white">　&nbsp;</span>');
 							}else{
 								dom.append(document.createTextNode(str));
 							}
@@ -888,7 +889,7 @@
 							scope._showInterval[i.toString()] = setTimeout((function(idx, str, dom){
 								return function(){
 									if(str == 'x'){
-										dom.append('<span class="b-word">　&nbsp;</span>');
+										dom.append('<span class="b-word-white">　&nbsp;</span>');
 									}else if((idx == 7 || idx == 8) && (str == "好" || str == "巴" || str == "一")){
 										dom.append('<span class="font-zhuin-poin1">' + str + '</span>');
 									}else if(idx == 13 && str == "正"){
