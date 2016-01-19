@@ -237,7 +237,7 @@
 							outerScope.stop(id);
 							// console.log(id + " stop show");
 						}
-					})(itemId, scope), startStamp + 800);
+					})(itemId, scope), startStamp + 500);
 					// console.log(itemId + " start show");
 				};
 			},
@@ -272,7 +272,7 @@
 					scope._processInterval = setInterval(function(){
 						setTimeout(scope._processFn(100), 100);
 						setTimeout(scope._processFn(100), 100);
-					}, 1000);	
+					}, 850);	
 				}
 			},
 			stop: function(itemId){
@@ -565,7 +565,7 @@
 						if(hasClicked == 'true') return false;
 						gamer.addScore("bomb", 1);
 						bombBody.attr('is-clicked', true);
-						bombBody.attr('src', scope._exploSrc);
+						bombBody.attr('src', scope._exploSrc).width('80%').css('margin','12px 8px');
 
 						var audioStr = '<audio autoplay><source src="sounds/sound-bomb.mp3" type="audio/mpeg"/></audio>';
 						stage4El.append(audioStr);
@@ -579,12 +579,12 @@
 							setTimeout((function(bb, id){
 								return function(){ 
 									scope.stop(id);
-									bb.attr('src', scope._bombSrc);
+									bb.attr('src', scope._bombSrc).width('100%').css('margin','');
 									bb.attr('is-clicked', false);
 									// bb.show();
 									// eb.hide();
 								};
-							})(bombBody, itemId), 400);
+							})(bombBody, itemId), 350);
 						}
 					});
 
@@ -727,83 +727,83 @@
 			_questions: [
 				{
 					title: 'x龍是客庄十二大節慶活動，也是臺灣客家族群元宵節的慶典活動。',
-					res: true
+					res: true, index: 0
 				},
 				{
 					title: 'x龍是客庄十二大節慶活動，也是臺灣原住民族元宵節的慶典活動。',
-					res: false
+					res: false, index: 1
 				},
 				{
 					title: 'x龍是客庄十二大節慶活動，也是臺灣客家族群中秋節的慶典活動。',
-					res: false
+					res: false, index: 2
 				},
 				{
 					title: 'x龍儀式是高雄地區最熱鬧有趣的元宵慶典活動。',
-					res: false
+					res: false, index: 3
 				},
 				{
 					title: 'x龍是苗栗地區最熱鬧有趣的元宵慶典活動。',
-					res: true
+					res: true, index: 4
 				},
 				{
 					title: '「x」是客家話「炸」的意思，「x龍」就是用鞭炮炸龍。',
-					res: true
+					res: true, index: 5
 				},
 				{
 					title: '「跈龍」就是用鞭炮炸龍的意思。',
-					res: false
+					res: false, index: 6
 				},
 				{
 					title: '好客龍的尾巴捲捲的，跟別的龍有些不一樣，尾巴向左捲的是母龍，向右捲的是公龍。',
-					res: false
+					res: false, index: 7
 				},
 				{
 					title: '好客龍的尾巴捲捲的，跟別的龍有些不一樣，尾巴向右捲的是母龍，向左捲的是公龍。',
-					res: true
+					res: true, index: 8
 				},
 				{
 					title: '糊龍通常在過年前完成，使用苗栗盛產的桂竹，製作完龍頭、龍尾及龍圈，糊上龍衣就完成了。',
-					res: true
+					res: true, index: 9
 				},
 				{
 					title: '糊龍通常在過年前完成，使用苗栗盛產的藺草，製作完龍頭、龍尾及龍圈，糊上龍衣就完成了。',
-					res: false
+					res: false, index: 10
 				},
 				{
 					title: '糊好的龍在出龍參拜前，要到媽祖廟前開光點睛、插金花、綁紅巾，祈求神明賜予神靈瑞氣。',
-					res: false
+					res: false, index: 11
 				},
 				{
 					title: '糊好的龍在出龍參拜前，要到伯公廟前開光點睛、插金花、綁紅巾，祈求神明賜予神靈瑞氣。',
-					res: true
+					res: true, index: 12
 				},
 				{
 					title: '依照傳統習俗，龍隊會在正月十五開始遶境，連續三天向家家戶戶拜年，為大家帶來祥瑞之氣。',
-					res: true
+					res: true, index: 13
 				},
 				{
 					title: '「跈龍」就是跟著龍隊走。',
-					res: true
+					res: true, index: 14
 				},
 				{
 					title: '「跈龍」是在伯公廟前感謝神龍庇佑家園，並送祂返回天上的儀式。',
-					res: false
+					res: false, index: 15
 				},
 				{
 					title: '在客家習俗中，跈龍除了可以吸收帶來平安吉祥的龍氣，也有跟著神龍前往光明大道的涵意。',
-					res: true
+					res: true, index: 16
 				},
 				{
 					title: 'x龍就是用鞭炮炸龍，是活動最熱鬧的時候，除了祈福消災，也希望新的一年運勢能夠越炸越旺！',
-					res: true
+					res: true, index: 17
 				},
 				{
 					title: '結束為期五天的迎龍之後，龍隊會回到點睛的伯公廟前舉行化龍儀式。',
-					res: false
+					res: false, index: 18
 				},
 				{
 					title: '結束為期三天的迎龍之後，龍隊會回到點睛的三山國王廟前舉行化龍儀式。',
-					res: false
+					res: false, index: 19
 				}
 			],
 			// _questionsTemp: null,
@@ -885,15 +885,19 @@
 						var text = qs.title;
 						scope._showInterval = {};
 						for(var i = 0, len = text.length; i < len; i++){
-							scope._showInterval[i.toString()] = setTimeout((function(str, dom){
+							scope._showInterval[i.toString()] = setTimeout((function(idx, str, dom){
 								return function(){
 									if(str == 'x'){
 										dom.append('<span class="b-word">　&nbsp;</span>');
+									}else if((idx == 7 || idx == 8) && (str == "好" || str == "巴" || str == "一")){
+										dom.append('<span class="font-zhuin-poin1">' + str + '</span>');
+									}else if(idx == 13 && str == "正"){
+										dom.append('<span class="font-zhuin-poin1">' + str + '</span>');
 									}else{
 										dom.append(document.createTextNode(str));
 									}
 								};
-							})(text[i], scope._textDom), (i+1) * 100);
+							})(qs.index, text[i], scope._textDom), (i+1) * 100);
 						}
 					}
 
@@ -1655,26 +1659,17 @@
 	<audio id="playAudio" preload="auto" loop> 
 		<source src="sounds/music-playing.mp3" type="audio/mpeg"/>
 	</audio>
-	<div id="zhuinTest" class="font-zhuin" style="font-size:24px;"></div>
+	<div id="zhuinTest" class="font-zhuin-poin1" style="font-size:24px;"></div>
 	<script type="text/javascript">
 		gamer.loading();
-		function showTest(){
-			var qs = stage5Process._questions;
-			var el = $('#zhuinTest');
-			for(var i = 0, len = qs.length; i < len; i++){
-				el.append((i+1).toString()  + '.' + qs[i].title + '<br/>');
-				// scope._showInterval[i.toString()] = setTimeout((function(str, dom){
-				// 	return function(){
-				// 		if(str == 'x'){
-				// 			dom.append('<span class="b-word">　&nbsp;</span>');
-				// 		}else{
-				// 			dom.append(document.createTextNode(str));
-				// 		}
-				// 	};
-				// })(text[i], scope._textDom), (i+1) * 100);
-			}
-		}
-		showTest();
+		// function showTest(){
+		// 	var qs = stage5Process._questions;
+		// 	var el = $('#zhuinTest');
+		// 	for(var i = 0, len = qs.length; i < len; i++){
+		// 		el.append((i+1).toString()  + '.' + qs[i].title + '<br/>');
+		// 	}
+		// }
+		// showTest();
 	</script>
   </body>
 </html>
