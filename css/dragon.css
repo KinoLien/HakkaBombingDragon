@@ -2,8 +2,8 @@
   font-family: 'DFPYuan-W5-PoIn2-BFW';
   src: url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.eot'); /* IE9 Compat Modes */
   src: url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.woff2') format('woff2'), /* Modern Browsers */
-    url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.woff') format('woff'), /* Modern Browsers */
+    /* url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.woff2') format('woff2'), Modern Browsers */
+    /* url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.woff') format('woff'), Modern Browsers */
     url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.ttf') format('truetype'), /* Safari, Android, iOS */
     url('../fonts/DFPYuan-W5-PoIn2-BFW/DFPYuan-W5-PoIn2-BFW.svg') format('svg'); /* Legacy iOS */  font-weight: normal;
   font-style: normal;
@@ -13,8 +13,8 @@
   font-family: 'DFPYuan-W5-PoIn1-BFW';
   src: url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.eot'); /* IE9 Compat Modes */
   src: url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.woff2') format('woff2'), /* Modern Browsers */
-    url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.woff') format('woff'), /* Modern Browsers */
+    /* url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.woff2') format('woff2'), Modern Browsers */
+     /* url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.woff') format('woff'), Modern Browsers */
     url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.ttf') format('truetype'), /* Safari, Android, iOS */
     url('../fonts/DFPYuan-W5-PoIn1-BFW/DFPYuan-W5-PoIn1-BFW.svg') format('svg'); /* Legacy iOS */  font-weight: normal;
   font-style: normal;
@@ -24,7 +24,7 @@
   font-family: 'DFPYuan-W5-ZhuIn-BFW';
   src: url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.eot'); /* IE9 Compat Modes */
   src: url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.woff') format('woff'), /* Modern Browsers */
+    /* url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.woff') format('woff'), Modern Browsers */
     url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.ttf') format('truetype'), /* Safari, Android, iOS */
     url('../fonts/DFPYuan-W5-ZhuIn-BFW/DFPYuan-W5-ZhuIn-BFW.svg') format('svg'); /* Legacy iOS */  font-weight: normal;
   font-style: normal;
