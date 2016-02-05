@@ -9,6 +9,7 @@
   	<link rel="stylesheet" type="text/css" href="css/dragon.css" />
   	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
   	<script type="text/javascript" src="js/parse-1.6.14.js"></script>
+  	<script type="text/javascript" src="js/jQuery-FontSpy.js"></script>
   	<style type="text/css">
   		/*@media (min-width: 768px) {
   			.navbar-form .form-control{
@@ -353,6 +354,7 @@
 							if(i + 1 == len){
 								scope._showInterval["ended"] = setTimeout(function(){
 									$(".message-next").addClass('to-zoom-small');
+									$(".message-oldman img").attr('src', 'images/02-message-oldman-2.gif');
 								}, (i + 1) * 200);
 							}
 						}
@@ -364,10 +366,13 @@
 					clearInterval(this._showInterval[i]);
 				}
 				this._showInterval = null;
+				this.reset();
+			},
+			reset:function(){
 				this._textDom.empty();
 				$(".message-next").removeClass('to-zoom-small');
-			},
-			reset:function(){}
+				$(".message-oldman img").attr('src', 'images/02-message-oldman.gif');
+			}
 		};
 
 		window.stage3Process = {
@@ -411,11 +416,11 @@
 					clearInterval(this._showInterval[i]);
 				}
 				this._showInterval = null;
-				this._textDom.empty();
-				$(".button-rules-enter").removeClass('to-zoom');
+				this.reset();
 			},
 			reset: function(){
-				this._showInterval = null;
+				this._textDom.empty();
+				$(".button-rules-enter").removeClass('to-zoom');
 			}
 		};
 
@@ -1440,20 +1445,31 @@
 
 			$(".prepare").empty();
 			// $(".prepare").hide();
-			setTimeout(function(){
-				gamer.forceToStage(1);
-				gamer.loading(false);
-			}, 2400);
+
+			window.waitForFontLoaded = setInterval(function(){
+				if(window.isFontLoaded){
+					clearInterval(waitForFontLoaded);
+					setTimeout(function(){
+						gamer.forceToStage(1);
+						gamer.loading(false);
+					}, 2000);
+				}else if(window.fontLoadError){
+					alert(window.fontLoadError);
+					window.location.reload(true);
+				}
+			}, 200);
+			
 		});
   	</script>
   </head>
   <body>
   	<div class="prepare">
-  		<span class="font-zhuin">一二三四五六七八九十</span>
+  		<!-- <span class="font-zhuin">一二三四五六七八九十</span> -->
   		<span class="font-zhuin-poin1">著被數</span>
   		<span class="font-zhuin-poin2">著數</span>
   		<img width="100%" src="images/01-intro-firework-stop.png"/>
   		<img width="100%" src="images/01-intro-firework.gif"/>
+  		<img width="100%" src="images/02-message-oldman-2.gif"/>
   		<img width="100%" src="images/04-bomb9.png"/>
   		<img width="100%" src="images/04-explosion.gif"/>
   		<img width="100%" src="images/04-person-pos.gif"/>
@@ -1671,6 +1687,18 @@
 		// 	}
 		// }
 		// showTest();
+		window.isFontLoaded = false;
+		fontSpy('DFPYuan-W5-ZhuIn-BFW', {
+			testString: '一二三四五六七八九十小朋友你們好啊玩玩看吧',
+	        delay: 100,
+	        timeOut: 6000,
+			success: function() {
+				window.isFontLoaded = true;
+			},
+			failure: function() {
+				window.fontLoadError = "Load Fonts Error";
+			}
+		});
 	</script>
   </body>
 </html>
