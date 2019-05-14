@@ -1454,6 +1454,7 @@
 						gamer.loading(false);
 					}, 2000);
 				}else if(window.fontLoadError){
+					clearInterval(waitForFontLoaded);
 					alert(window.fontLoadError);
 					window.location.reload(true);
 				}
@@ -1693,7 +1694,7 @@
 		fontSpy('DFPYuan-W5-ZhuIn-BFW', {
 			testString: '一二三四五六七八九十小朋友你們好啊玩玩看吧',
 	        delay: 100,
-	        timeOut: 7000,
+	        timeOut: 20000,
 			success: function() {
 				window.isFontLoaded = true;
 			},
